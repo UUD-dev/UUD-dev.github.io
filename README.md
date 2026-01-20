@@ -17,7 +17,7 @@
 
 	https://UUD-dev.github.io
 
-If your Streamer.bot broadcaster accounts and bot accounts are setup correctly you should now be forwarding chat messages between Twitch / YouTube.
+If your Streamer.bot broadcaster accounts and bot accounts are setup correctly you should now be forwarding chat messages between Twitch / YouTube. And you should see a notification "SUCCESS: Websocket connection connected! (localhost:8080)"
 
 ## How to run the plugin:
 
