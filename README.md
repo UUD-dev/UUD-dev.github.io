@@ -13,7 +13,7 @@
 	Endpoint: /
 	Authentication: Disabled
 
-## Navigate to the URL:
+## Test the connection:
 
 	https://UUD-dev.github.io
 
@@ -21,7 +21,7 @@ If your Streamer.bot broadcaster accounts and bot accounts are setup correctly y
 	
 	"SUCCESS: Websocket connection connected! (localhost:8080)"
 
-## How to run the plugin:
+## How to use the plugin:
 
 	1. Keep using this web resource (requires URL to be open in browser to work, this works but isnt ideal if you dont want the extra browser window)
 	2. Add the URL to OBS as a browser source (will load and run automatically with OBS, will require to stay loaded if you switch scenes. this works but not really optimal)
