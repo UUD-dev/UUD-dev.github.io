@@ -24,6 +24,28 @@
 
             // Only needed if authentication is enabled
             password: 'my-secret-password',
+            onConnect: (data) => {
+                console.log('Successfully connected to Streamer.bot instance:', data);
+
+                let newMessageDiv = document.createElement('div');
+                let messageId = generateMessageId()
+                newMessageDiv.id = messageId
+                let alertMessage = 
+                `
+                <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">SUCCESS: Websocket connection connected! (localhost:${websocketport})</span></b></span>
+                `
+                newMessageDiv.innerHTML = `
+
+                <span class="message">${alertMessage}</span>`;
+
+                newMessageDiv.className = 'chat-message';
+                var chatBox = document.getElementById('messages');
+
+                chatBox.appendChild(newMessageDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                deleteMessage(messageId, 1)
+            },
             onError: (err) => {
                 console.log('ERROR:', err);
 
@@ -32,7 +54,7 @@
                 newMessageDiv.id = messageId
                 let alertMessage = 
                 `
-                <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">ERROR: Websocket connection failed.<br>(Check streamer.bot's websocket is running on port ${websocketport})</span></b></span>
+                <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">ERROR: Websocket connection failed. (Check streamer.bot's websocket is running on port ${websocketport}</span></b></span>
                 `
                 newMessageDiv.innerHTML = `
 
@@ -45,7 +67,7 @@
                 chatBox.scrollTop = chatBox.scrollHeight;
 
                 deleteMessage(messageId, 10)
-    }
+            }
         });
 
         ////////////////////////
@@ -383,7 +405,7 @@
                                 console.log("REMOVING MESSAGE",msgId)
                                 msgElement.remove(); // Or msgElement.style.display = 'none'; to hide it
                         }
-                }, 1000 * 60 * timeout); // in minutes
+                }, 1000 * timeout); // in seconds
             }
             
         }
