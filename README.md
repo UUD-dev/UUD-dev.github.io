@@ -15,7 +15,7 @@
 
 ## Test the connection:
 
-	https://UUD-dev.github.io
+	Navigate to: https://UUD-dev.github.io
 
 If your Streamer.bot broadcaster accounts and bot accounts are setup correctly you should now be forwarding chat messages between Twitch / YouTube. And you should see a notification: 
 	
