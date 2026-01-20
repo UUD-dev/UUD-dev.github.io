@@ -1,4 +1,4 @@
-# HOW TO:
+# Plugin SETUP:
 
 ## Enable WebSocket Server from the settings as follows:
 
@@ -19,7 +19,7 @@
 
 If your Streamer.bot broadcaster accounts and bot accounts are setup correctly you should now be forwarding chat messages between Twitch / YouTube.
 
-## Next steps:
+## How to run the plugin:
 
 	1. Keep using this web resource (requires URL to be open in browser to work, this works but isnt ideal if you dont want the extra browser window)
 	2. Add the URL to OBS as a browser source (will load and run automatically with OBS, will require to stay loaded if you switch scenes. this works but not really optimal)
