@@ -7,6 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@streamerbot/client/dist/streamerbot-client.js"></script>
     <script id="thebrains">
         const websocketport = 8080
+        const websockethost = '127.0.0.1'
         ///////////////////////////////////////
         //CONNECTING TO THE STREAMER.BOT CLIENT
         ///////////////////////////////////////
@@ -14,7 +15,7 @@
         const client = new StreamerbotClient({
 
             //sicne we are hosting the file locally we dont need an ip, leave as 'localhost' or '127.0.0.1'
-            host: '127.0.0.1',
+            host: websockethost,
 
             //the port we used in Streamer.bot's websocket settings.
             port: websocketport, 
@@ -44,7 +45,7 @@
                 chatBox.appendChild(newMessageDiv);
                 chatBox.scrollTop = chatBox.scrollHeight;
 
-                deleteMessage(messageId, 1)
+                deleteMessage(messageId, 10)
             },
             onError: (err) => {
                 console.log('ERROR:', err);
