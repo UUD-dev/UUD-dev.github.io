@@ -63,7 +63,9 @@
             console.log("USERDTA : ",data.data)
 
             //check to see if we should ignore this message
-            for (user in ignoreList){ if (username.toLowerCase() == user.toLowerCase()){ 
+            for (let user in ignoreList){ 
+                console.log("CHECKING",user,"VS",username)
+                if (username.toLowerCase() == user.toLowerCase()){ 
                     console.log("IGNOREING USER:",username)
                     return 
                 }
