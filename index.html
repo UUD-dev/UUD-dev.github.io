@@ -278,12 +278,12 @@
         //MESSAGE FUNCTIONS
         ///////////////////
 
-        function sendTwitchMessage(message){
-            client.doAction(action = {name:"sendMessageToTwitch"}, args = {message:message});
+        async function sendTwitchMessage(message){
+            await client.doAction(action = {name:"sendMessageToTwitch"}, args = {message:message});
         }
 
-        function sendYoutubeMessage(message){
-            client.doAction(action = {name:"sendMessageToYoutube"}, args = {message:message});
+        async function sendYoutubeMessage(message){
+            await client.doAction(action = {name:"sendMessageToYoutube"}, args = {message:message});
         }
 
         function displayTwitchChatMessage(data) {
