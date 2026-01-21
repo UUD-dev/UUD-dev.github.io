@@ -62,7 +62,11 @@
             let username = data.data.user.name
 
             //check to see if we should ignore this message
-            for (user in ignoreList){ if (username.toLowerCase() == user.toLowerCase()){ return }}
+            for (user in ignoreList){ if (username.toLowerCase() == user.toLowerCase()){ 
+                    console.log("IGNOREING USER:",username)
+                    return 
+                }
+            }
 
             //set the message of the message sender.
             let message = data.data.user.message
@@ -84,7 +88,11 @@
             let username = data.data.user.name
 
             //check to see if we should ignore this message
-            for (user in ignoreList){ if (username.toLowerCase() == user.toLowerCase()){ return }}
+            for (user in ignoreList){ if (username.toLowerCase() == user.toLowerCase()){ 
+                    console.log("IGNOREING USER:",username)
+                    return 
+                }
+            }
 
             //set the message of the message sender.
             let message = data.data.user.message
