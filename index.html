@@ -60,7 +60,7 @@
             
             //set the username of the message sender.
             let username = data.data.user.name
-            console.log("USERDTA : ",data.data.user)
+            console.log("USERDTA : ",data.data)
 
             //check to see if we should ignore this message
             for (user in ignoreList){ if (username.toLowerCase() == user.toLowerCase()){ 
