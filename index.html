@@ -279,16 +279,17 @@
         ///////////////////
 
         function sendTwitchMessage(username, message){
-            client.doAction(action = {name:"sendMessageToTwitch"}, {
-                "message": message,
-                "username": username
-            });
+            client.doAction(
+                action = {name:"sendMessageToTwitch"},
+                args = {message: message,user: username}
+            );
         }
 
         function sendYoutubeMessage(username, message){
             client.doAction(
                 action = {name:"sendMessageToYoutube"},
-                args = {message: message,user: username});
+                args = {message: message,user: username}
+            );
         }
 
         function displayTwitchChatMessage(data) {
