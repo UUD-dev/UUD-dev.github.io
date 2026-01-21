@@ -279,10 +279,11 @@
         ///////////////////
 
         async function sendTwitchMessage(username, message){
+            let args = {username:username, message:message}
             let test = await client.doAction(action = {name:"sendMessageToYoutube"}, args = {message:message});
             console.log("testtwitch",test)
         }
-        console.log("Test12")
+        console.log("Test13")
         async function sendYoutubeMessage(username, message){
             let test = await client.doAction(action = {name:"sendMessageToYoutube"}, args = {message:message});
             console.log("testyoutube",test)
