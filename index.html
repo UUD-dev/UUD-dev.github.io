@@ -286,10 +286,10 @@
         }
 
         function sendYoutubeMessage([username, message]){
-            client.doAction(
-                action = {name:"sendMessageToYoutube"},
-                args = {message: message,user: username}
-            );
+            client.doAction({
+                action: {name:"sendMessageToYoutube"},
+                args: {message: message,user: username}
+            });
         }
 
         function displayTwitchChatMessage(data) {
