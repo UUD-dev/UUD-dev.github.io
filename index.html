@@ -84,7 +84,7 @@
             let messageString = `[${username}]: ${data.data.message.message}` 
 
             //send the message to youtube.
-            sendYoutubeMessage(messageString)    
+            sendYoutubeMessage(username, message)    
             
             // Send the chat data to our function to handle displaying twitch messages in the overlay.
             displayTwitchChatMessage(data.data)	
@@ -129,7 +129,7 @@
             let messageString = `[${username}]: ${data.data.message}`
             
             //send the message to twitch.
-            sendTwitchMessage(messageString)
+            sendTwitchMessage(username, message)
             
             // Send the chat data to our function to handle displaying youtube messages in the overlay.
             displayYoutubeChatMessage(data.data)	
@@ -279,11 +279,11 @@
         ///////////////////
 
         function sendTwitchMessage(message){
-            client.doAction(action = {message:message});
+            client.doAction(action = {name:"sendMessageToTwitch"}, {"message": message});
         }
 
         function sendYoutubeMessage(message){
-            client.doAction(action = {message:message});
+            client.doAction(action = {name:"sendMessageToYoutube"}, {"message": message});
         }
 
         function displayTwitchChatMessage(data) {
