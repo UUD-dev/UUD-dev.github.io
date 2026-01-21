@@ -64,7 +64,7 @@
 
             //check to see if we should ignore this message
             for (let user in ignoreList){ 
-                console.log("CHECKING",user,"VS",username)
+                console.log("CHECKING",ignoreList[user].toLowerCase(),"VS",username.toLowerCase())
                 if (username.toLowerCase() == ignoreList[user].toLowerCase()){ 
                     console.log("IGNOREING USER:",username)
                     return 
@@ -92,7 +92,7 @@
 
             //check to see if we should ignore this message
             for (let user in ignoreList){ 
-                console.log("CHECKING",user,"VS",username)
+                console.log("CHECKING",ignoreList[user].toLowerCase(),"VS",username.toLowerCase())
                 if (username.toLowerCase() == ignoreList[user].toLowerCase()){ 
                     console.log("IGNOREING USER:",username)
                     return 
