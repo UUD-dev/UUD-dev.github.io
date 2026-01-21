@@ -84,7 +84,7 @@
             let messageString = `[${username}]: ${data.data.message.message}` 
 
             //send the message to youtube.
-            sendYoutubeMessage(username, message)    
+            sendYoutubeMessage(messageString)    
             
             // Send the chat data to our function to handle displaying twitch messages in the overlay.
             displayTwitchChatMessage(data.data)	
@@ -129,7 +129,7 @@
             let messageString = `[${username}]: ${data.data.message}`
             
             //send the message to twitch.
-            sendTwitchMessage(username, message)
+            sendTwitchMessage(messageString)
             
             // Send the chat data to our function to handle displaying youtube messages in the overlay.
             displayYoutubeChatMessage(data.data)	
@@ -278,13 +278,12 @@
         //MESSAGE FUNCTIONS
         ///////////////////
 
-        async function sendTwitchMessage(username, message){
-            let args = {username:username, message:message}
+        async function sendTwitchMessage( message){
             let test = await client.doAction(action = {name:"sendMessageToYoutube"}, args = {message:message});
             console.log("testtwitch",test)
         }
         console.log("Test13")
-        async function sendYoutubeMessage(username, message){
+        async function sendYoutubeMessage(message){
             let test = await client.doAction(action = {name:"sendMessageToYoutube"}, args = {message:message});
             console.log("testyoutube",test)
         }
