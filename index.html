@@ -84,7 +84,7 @@
             let messageString = `[${username}]: ${data.data.message.message}` 
 
             //send the message to youtube.
-            sendYoutubeMessage(username, message)    
+            sendYoutubeMessage(messageString)    
             
             // Send the chat data to our function to handle displaying twitch messages in the overlay.
             displayTwitchChatMessage(data.data)	
