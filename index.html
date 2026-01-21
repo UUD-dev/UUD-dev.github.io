@@ -8,6 +8,7 @@
     <script id="thebrains">
         const websocketport = 8080
         const websockethost = '127.0.0.1'
+        var ignoreList = []
         ///////////////////////////////////////
         //CONNECTING TO THE STREAMER.BOT CLIENT
         ///////////////////////////////////////
@@ -37,6 +38,10 @@
                 <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Client connected succesfully!</span></b></span>
                 `
                 displayTemporaryMessage(message)
+                let ignoreListOutput = 
+                `
+                <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[UPDATE] Ignorelist : ${updateExcluded()}</span></b></span>
+                `
             }
         });
 
@@ -48,38 +53,14 @@
         client.on('Twitch.ChatMessage', async (data) => {
 
             //set the username of the message sender.
-            let username = data.data.user.name.toLowerCase()
+            let username = data.data.user.name
+
+            //check to see if we should ignore this message
+            for (user in ignoreList){ if (username.toLowerCase() == user.toLowerCase()){ return }}
 
             //set the message of the message sender.
             let message = data.data.user.message
 
-            // retreive the broadcaster information from Streamer.bot
-            const response = await client.getBroadcaster(); 
-            // console.log("response",response)
-            // console.log(response.platforms)
-            //This loops through all active streaming platforms (Twitch, YouTube)
-            for (let i in response.platforms){
-                //checks for bot user's for all active streams (UUDbot)
-                let botUser = response.platforms[i].botUserName.toLowerCase()
-                //checks for the broadcasters username in all active streams (UUDvideogames)
-                let broadcastUser = response.platforms[i].broadcastUserName.toLowerCase()
-                //If we find a bot match, discard the message.
-                if (username == botUser){
-                    console.log("USER MATCH BOT ACCOUNT, IGNORING",username) 
-                    console.log(`[${username}]: ${data.data.message.message}`)
-                    return
-                }
-
-                //If we find a broadcaster match, discard the message.
-                else if (username == broadcastUser){
-                    console.log("USER MATCH BROADCAST ACCOUNT, IGNORING",username)
-                    console.log(`[${username}]: ${data.data.message.message}`) 
-                    return
-                }
-                
-            }
-
-            
             //creating the message string EXAMPLE (   [User1234]: Hello stream!   )
             let messageString = `[${username}]: ${data.data.message.message}` 
 
@@ -94,36 +75,13 @@
         client.on('YouTube.Message', async (data) => {
             
             //set the username of the message sender.
-            let username = data.data.user.name.toLowerCase()
+            let username = data.data.user.name
+
+            //check to see if we should ignore this message
+            for (user in ignoreList){ if (username.toLowerCase() == user.toLowerCase()){ return }}
+
+            //set the message of the message sender.
             let message = data.data.user.message
-
-            // retreive the broadcaster information from Streamer.bot
-            const response = await client.getBroadcaster();
-
-            //This loops through all active streaming platforms (Twitch, YouTube)
-            for (let i in response.platforms){
-
-                //checks for bot user's for all active streams (UUDbot)
-                let botUser = response.platforms[i].botUserName.toLowerCase()
-
-                //checks for the broadcasters username in all active streams (UUDvideogames)
-                let broadcastUser = response.platforms[i].broadcastUserName.toLowerCase()
-
-                //If we find a bot match, discard the message.
-                if (username == botUser){
-                    console.log("USER MATCH BOT ACCOUNT, IGNORING",botUser)
-                    console.log(`[${username}]: ${data.data.message}`)
-                    return
-                }
-
-                //If we find a broadcaster match, discard the message.
-                else if (username == broadcastUser){
-                    console.log("USER MATCH BROADCAST ACCOUNT, IGNORING",botUser)
-                    console.log(`[${username}]: ${data.data.user.message}`)
-                    return
-                }
-                
-            }
             
             //creating the message string EXAMPLE (   [User1234]: Hello stream!   )
             let messageString = `[${username}]: ${data.data.message}`
@@ -418,7 +376,29 @@
             hexColor = `#${hexColor.padStart(6, '0')}`;
             return hexColor;
         }
-    
+        
+        //////////////////
+        //HELPER FUNCTIONS
+        //////////////////
+
+        async function updateExcluded(){
+            //reset the array
+            ignoreList = ['Streamelements']
+            // retreive the broadcaster information from Streamer.bot
+            const response = await client.getBroadcaster(); 
+            // console.log("response",response)
+            // console.log(response.platforms)
+            //This loops through all active streaming platforms (Twitch, YouTube)
+            for (let i in response.platforms){
+                //checks for bot user's for all active streams (UUDbot)
+                let botUser = response.platforms[i].botUserName.toLowerCase()
+                //checks for the broadcasters username in all active streams (UUDvideogames)
+                let broadcastUser = response.platforms[i].broadcastUserName.toLowerCase()
+                //If we find a bot match, discard the message.
+                ignoreList.push(botUser,broadcastUser)
+            }
+            return ignoreList
+        }
     </script>
     <style id="mainstyle">
         body { background-color: rgba(158, 48, 158, 0); margin: 0px auto; overflow: hidden; font-family: "Lucida Console", "Courier New", monospace;}
