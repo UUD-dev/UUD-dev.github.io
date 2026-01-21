@@ -11,7 +11,7 @@
 	Address: 127.0.0.1
 	Port:8080
 	Endpoint: /
-	Authentication: Disabled
+	Authentication: Enabled (password:'password')
 
 ## Test the connection:
 
