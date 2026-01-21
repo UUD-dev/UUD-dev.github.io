@@ -279,7 +279,6 @@
         ///////////////////
 
         async function sendTwitchMessage(username, message){
-            console.log(mesage)
             let test = await client.doAction(action = {name:"sendMessageToTwitch"}, {"username":username,"message": message});
             console.log(test)
         }
