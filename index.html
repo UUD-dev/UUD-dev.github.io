@@ -23,8 +23,21 @@
             //dont change
             endpoint: '/', 
 
-            // Only needed if authentication is enabled
-            password: 'password',
+            onError: (err) => {
+                console.log("ERROR\m",err)
+                let message = 
+                `
+                <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[ERROR!] ${JSON.stringify(err)}</span></b></span>
+                `
+                displayTemporaryMessage(message)
+            },
+            onConnect: (data) => {
+                let message = 
+                `
+                <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Client connected succesfully!</span></b></span>
+                `
+                displayTemporaryMessage(message)
+            }
         });
 
         ////////////////////////
@@ -36,6 +49,9 @@
 
             //set the username of the message sender.
             let username = data.data.user.name.toLowerCase()
+
+            //set the message of the message sender.
+            let message = data.data.user.message
 
             // retreive the broadcaster information from Streamer.bot
             const response = await client.getBroadcaster(); 
@@ -67,33 +83,24 @@
             //creating the message string EXAMPLE (   [User1234]: Hello stream!   )
             let messageString = `[${username}]: ${data.data.message.message}` 
 
-            sendYotuubeMessage(messageString)
-
-            // console.log("sending chat to YouTube from Twitch",messageString)
-            // // Sending the message string to youtube via our bot account (UUDbot)
-            // let testMessage = await client.sendMessage(platform = "youtube",
-            //             message = messageString,
-            //             options = { bot: true,
-            //                         internal: false });   
-            // console.log("SENDING TWITCH CHAT TO YOUTUBE",testMessage)          
+            //send the message to youtube.
+            sendYoutubeMessage(username, message)    
             
             // Send the chat data to our function to handle displaying twitch messages in the overlay.
             displayTwitchChatMessage(data.data)	
                     
-        });
+        });           
         //This function runs when we detect a youtube chat message has been sent.
         client.on('YouTube.Message', async (data) => {
             
             //set the username of the message sender.
             let username = data.data.user.name.toLowerCase()
+            let message = data.data.user.message
 
             // retreive the broadcaster information from Streamer.bot
             const response = await client.getBroadcaster();
-            console.log("PLATFORMS",response)
+
             //This loops through all active streaming platforms (Twitch, YouTube)
-
-            console.log(`INCOMING YOUTUBE MESSAGE [${username}]: ${data.data.message}`)
-
             for (let i in response.platforms){
 
                 //checks for bot user's for all active streams (UUDbot)
@@ -117,15 +124,13 @@
                 }
                 
             }
+            
             //creating the message string EXAMPLE (   [User1234]: Hello stream!   )
             let messageString = `[${username}]: ${data.data.message}`
-
-            //Sending the message string to twitch via our bot account (UUDbot)
-            let testMessage = await client.sendMessage(platform = "twitch",
-                        message = messageString,
-                        options = { bot: true,
-                                    internal: false });
-
+            
+            //send the message to twitch.
+            sendTwitchMessage(username, message)
+            
             // Send the chat data to our function to handle displaying youtube messages in the overlay.
             displayYoutubeChatMessage(data.data)	
             					   
@@ -273,10 +278,17 @@
         //MESSAGE FUNCTIONS
         ///////////////////
 
-        function sendYotuubeMessage(message){
-            client.doAction(action = {name:"sendYoutube"}, {
-                // Optional custom arguments (available as %argName% in Streamer.bot)
-                "message": message
+        function sendTwitchMessage(username, message){
+            client.doAction(action = {name:"sendMessageToTwitch"}, {
+                "message": message,
+                "username": username
+            });
+        }
+
+        function sendYoutubeMessage(username, message){
+            client.doAction(action = {name:"sendMessageToYoutube"}, {
+                "message": message,
+                "username": username
             });
         }
 
@@ -371,6 +383,24 @@
             chatBox.scrollTop = chatBox.scrollHeight;
 
             deleteMessage(messageId, 0)
+
+        }
+
+        function displayTemporaryMessage(message) {
+
+            let newMessageDiv = document.createElement('div');
+            let messageId = generateMessageId()
+            newMessageDiv.id = messageId
+            newMessageDiv.innerHTML = `
+            <span class="message">${message}</span>`;
+
+            newMessageDiv.className = 'chat-message';
+            var chatBox = document.getElementById('messages');
+
+            chatBox.appendChild(newMessageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            deleteMessage(messageId, 10)
 
         }
 
