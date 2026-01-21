@@ -38,10 +38,16 @@
                 <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Client connected succesfully!</span></b></span>
                 `
                 displayTemporaryMessage(message)
+                let excludedList = updateExcluded()
                 let ignoreListOutput = 
                 `
-                <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[UPDATE] Ignorelist : ${updateExcluded()}</span></b></span>
+                <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[UPDATE] Ignorelist : ${excludedList}</span></b></span>
                 `
+                displayTemporaryMessage(excludedList)
+
+                setInterval(() => {
+                    updateExcluded()
+                }, 1000*60*5);
             }
         });
 
