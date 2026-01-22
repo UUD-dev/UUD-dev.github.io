@@ -25,10 +25,11 @@ const client = new StreamerbotClient({
         );
     },
     onConnect: async (data) => {
+        console.log('connected')
         displayAlertMessage(
-            'Chat Overlay Connected (v0.6.0.2)',
+            'Chat Overlay Connected (v0.6.0.3)',
             ['alertConnected'],
-            5
+            1
         );
     }
 
