@@ -26,7 +26,7 @@ const client = new StreamerbotClient({
     },
     onConnect: async (data) => {
         displayAlertMessage(
-            'Chat Overlay Connected (v0.5.24.1)',
+            'Chat Overlay Connected (v0.5.24.2)',
             ['alertConnected'],
             5
         );
@@ -395,19 +395,27 @@ function generateMessageId() {
 }
 
 function generateUniqueColor(userId) {
+    // Convert to string to handle numbers or strings
     const str = userId.toString();
+
+    // Create a simple numeric seed from character codes
     let seed = 0;
-    for (let i = 0; i < str.length; i++) seed += str.charCodeAt(i);
+    for (let i = 0; i < str.length; i++) {
+        seed += str.charCodeAt(i);
+    }
 
-    // Hue from 0–360
-    const hue = (seed * 137) % 360;
+    // Use the seed to generate a hue between 0-360
+    const hue = seed % 360;
 
-    // Keep saturation & lightness nice
-    const saturation = 70; // 70%
-    const lightness = 55;  // 55%
+    // Set saturation and lightness to make the color vibrant but readable
+    const saturation = 70; // 70% saturated
+    const lightness = 55;  // 55% lightness
 
-    const hexColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-    return hexColor;
+    // Return an HSL color string
+    const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+
+    console.log('GENERATED COLOR:', color, 'for user:', userId);
+    return color;
 }
 
 
