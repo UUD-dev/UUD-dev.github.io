@@ -30,7 +30,8 @@ You should have a window appear after this step that displays both your Twitch a
 3. Under Dock Name enter a name that describes our app (Example: "UUDChatBot")
 4. Under URL enter the following URL:
 
-	https://uud-dev.github.io/
+		
+	```https://uud-dev.github.io```
 
 
 ## Everything should be setup and ready!
