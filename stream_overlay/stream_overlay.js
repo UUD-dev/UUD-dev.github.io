@@ -26,7 +26,7 @@ const client = new StreamerbotClient({
     },
     onConnect: async (data) => {
         displayAlertMessage(
-            'Chat Overlay Connected (v0.5.24.61)',
+            'Chat Overlay Connected (v0.5.24.7)',
             ['alertConnected'],
             5
         );
@@ -449,53 +449,46 @@ function parseTwitchMessage(message, emotes) {
     const emotePositions = [];
 
     // Flatten emotes
-    if (Array.isArray(emotes)) {
-        // Rare case, keep same as before
-        emotes.forEach(e => {
-            emotePositions.push({ id: e.id, start: e.start, end: e.end });
-        });
-    } else {
-        for (const emoteId in emotes) {
-            const e = emotes[emoteId];
-            if (Array.isArray(e)) {
-                e.forEach(pos => emotePositions.push({ id: emoteId, start: pos.start, end: pos.end }));
-            } else if (typeof e.start === 'number') {
-                emotePositions.push({ id: emoteId, start: e.start, end: e.end });
-            }
+    for (const emoteId in emotes) {
+        const positions = emotes[emoteId];
+        if (Array.isArray(positions)) {
+            positions.forEach(pos => emotePositions.push({ id: emoteId, start: pos.start, end: pos.end }));
+        } else if (typeof positions.start === 'number') {
+            emotePositions.push({ id: emoteId, start: positions.start, end: positions.end });
         }
     }
 
-    // Sort by position
-  emotePositions.sort((a, b) => a.start - b.start);
+    // Sort emotes by start index
+    emotePositions.sort((a, b) => a.start - b.start);
 
-  let cursor = 0;
+    let cursor = 0;
 
-  emotePositions.forEach(emote => {
-    if (cursor < emote.start) {
-      fragments.push(
-        document.createTextNode(message.slice(cursor, emote.start))
-      );
+    emotePositions.forEach(emote => {
+        // Add text before emote
+        if (cursor < emote.start) {
+            fragments.push(document.createTextNode(message.slice(cursor, emote.start)));
+        }
+
+        // Add emote image
+        const img = document.createElement('img');
+        img.src = `https://static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/1.0`;
+        img.className = 'emote';
+        img.alt = '';
+        img.loading = 'lazy';
+        fragments.push(img);
+
+        // Move cursor to **after the emote**
+        cursor = emote.end + 1; // still correct because slice is exclusive
+    });
+
+    // Add any remaining text after last emote
+    if (cursor < message.length) {
+        fragments.push(document.createTextNode(message.slice(cursor)));
     }
 
-    const img = document.createElement('img');
-    img.src = `https://static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/1.0`;
-    img.className = 'emote';
-    img.alt = '';
-    img.loading = 'lazy';
-
-    fragments.push(img);
-
-    cursor = emote.end + 1;
-  });
-
-  if (cursor < message.length) {
-    fragments.push(
-      document.createTextNode(message.slice(cursor))
-    );
-  }
-
-  return fragments;
+    return fragments;
 }
+
 
   
 
