@@ -42,9 +42,10 @@ body {
 /* =====================
    MESSAGE CONTENT
 ===================== */
-.message {
-  display: inline;
+.chat-message {
+  white-space: pre-line;
 }
+
 
 /* =====================
    USERNAME
