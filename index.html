@@ -35,7 +35,7 @@
             onConnect: async (data) => {
                 let message = 
                 `
-                <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Client connected succesfully!</span></b></span>
+                <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Client connected succesfully! (v0.3.1)</span></b></span>
                 `
                 displayTemporaryMessage(message)
                 let excludedList = await updateExcluded()
@@ -56,11 +56,10 @@
         ////////////////////////
 
         //This function runs when we detect a twitch chat message has been sent.
-        client.on('Twitch.ChatMessage', async (data) => {
+        client.on('Twitch.ChatMessage', (data) => {
             
             //set the username of the message sender.
             let username = data.data.user.name
-            console.log("USERDTA : ",data.data)
 
             //check to see if we should ignore this message
             for (let user in ignoreList){ 
@@ -85,7 +84,7 @@
                     
         });           
         //This function runs when we detect a youtube chat message has been sent.
-        client.on('YouTube.Message', async (data) => {
+        client.on('YouTube.Message', (data) => {
             
             //set the username of the message sender.
             let username = data.data.user.name
@@ -419,7 +418,8 @@
             console.log("IGNORELIST : ",ignoreList)
             return ignoreList
         }
-    </script>
+   
+   </script>
     <style id="mainstyle">
         body { background-color: rgba(158, 48, 158, 0); margin: 0px auto; overflow: hidden; font-family: "Lucida Console", "Courier New", monospace;}
 
