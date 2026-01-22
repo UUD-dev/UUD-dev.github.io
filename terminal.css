@@ -101,7 +101,8 @@ img[src*="youtube"] {
 .chat-message::before {
   content: ">";
   color: #6a9955;
-  margin-right: 4px;
+  margin-right: 0;
+  padding:0;
 }
 
 
