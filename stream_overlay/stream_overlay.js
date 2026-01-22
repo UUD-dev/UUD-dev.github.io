@@ -26,7 +26,7 @@ const client = new StreamerbotClient({
     },
     onConnect: async (data) => {
         displayAlertMessage(
-            'Chat Overlay Connected (v0.6.0.1)',
+            'Chat Overlay Connected (v0.6.0.2)',
             ['alertConnected'],
             5
         );
@@ -244,7 +244,7 @@ function createChatMessage({
         nameSpan.textContent = username;
         if (color) nameSpan.style.color = color;
         header.appendChild(nameSpan);
-        header.append(':');
+        // header.append(':');
         }
 
         container.appendChild(header);
