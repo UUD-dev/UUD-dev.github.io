@@ -26,7 +26,7 @@ const client = new StreamerbotClient({
     },
     onConnect: async (data) => {
         displayAlertMessage(
-            'Chat Overlay Connected (v0.5.24.2)',
+            'Chat Overlay Connected (v0.5.24.4)',
             ['alertConnected'],
             5
         );
@@ -936,61 +936,34 @@ function parseTwitchMessage(message, emotes) {
     emotePositions.sort((a, b) => a.start - b.start);
 
     let cursor = 0;
-    for (const emote of emotePositions) {
-        // Text before emote
+
+    emotePositions.forEach(emote => {
         if (cursor < emote.start) {
-            fragments.push(document.createTextNode(message.slice(cursor, emote.start)));
+        fragments.push(
+            document.createTextNode(message.slice(cursor, emote.start))
+        );
         }
 
-        // Emote image
         const img = document.createElement('img');
         img.src = `https://static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/1.0`;
         img.className = 'emote';
         img.alt = '';
         img.loading = 'lazy';
+
         fragments.push(img);
 
         cursor = emote.end + 1;
-    }
+    });
 
-    // Any remaining text after the last emote
     if (cursor < message.length) {
-        fragments.push(document.createTextNode(message.slice(cursor)));
+        fragments.push(
+        document.createTextNode(message.slice(cursor))
+        );
     }
 
     return fragments;
 }
 
 
-  // Sort by position
-  emotePositions.sort((a, b) => a.start - b.start);
-
-  let cursor = 0;
-
-  emotePositions.forEach(emote => {
-    if (cursor < emote.start) {
-      fragments.push(
-        document.createTextNode(message.slice(cursor, emote.start))
-      );
-    }
-
-    const img = document.createElement('img');
-    img.src = `https://static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/1.0`;
-    img.className = 'emote';
-    img.alt = '';
-    img.loading = 'lazy';
-
-    fragments.push(img);
-
-    cursor = emote.end + 1;
-  });
-
-  if (cursor < message.length) {
-    fragments.push(
-      document.createTextNode(message.slice(cursor))
-    );
-  }
-
-  return fragments;
-}
+  
 
