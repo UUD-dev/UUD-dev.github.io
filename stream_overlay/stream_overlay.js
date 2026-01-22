@@ -263,7 +263,7 @@ client.on('Twitch.RewardRedemption', ({ event, data }) => {
 function displayTwitchChatMessage(data) {
     let username = data.message.displayName
     const chatColor = getOrAssignColor(username);
-    console.log("Chat Colour for ".username," : ",chatColor)
+    console.log("Chat Colour for ",username," : ",chatColor)
     let message = data.message.message
 
     let newMessageDiv = document.createElement('div');
