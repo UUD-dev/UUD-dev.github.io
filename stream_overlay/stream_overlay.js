@@ -24,7 +24,7 @@ const client = new StreamerbotClient({
     onConnect: async (data) => {
         let message = 
         `
-        <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Chat Overlay Connected (v0.3.5)</span></b></span>
+        <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Chat Overlay Connected (v0.3.6)</span></b></span>
         `
         displayTemporaryMessage(message)
     }
@@ -262,6 +262,7 @@ client.on('Twitch.RewardRedemption', ({ event, data }) => {
 
 function displayTwitchChatMessage(data) {
     let username = data.message.displayName
+    console.log(username)
     const chatColor = getOrAssignColor(username);
     console.log("Chat Colour for ",username," : ",chatColor)
     let message = data.message.message
@@ -437,9 +438,11 @@ function generateUniqueColor(userId) {
 
 function getOrAssignColor(userId) {
   if (userColors.has(userId)) {
+    console.log("USER HAS COLOR:",userId,userColors.get(userId))
     return userColors.get(userId);
   } else {
     const color = generateUniqueColor(userId);
+    console.log("GENERATED COLOR: ",color,userId)
     userColors.set(userId, color);
     return color;
   }
