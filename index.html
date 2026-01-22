@@ -35,7 +35,7 @@
             onConnect: async (data) => {
                 let message = 
                 `
-                <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Client connected succesfully! (v0.3.2)</span></b></span>
+                <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Client connected succesfully! (v0.3.3)</span></b></span>
                 `
                 displayTemporaryMessage(message)
                 let excludedList = await updateExcluded()
@@ -412,12 +412,15 @@
             // console.log(response.platforms)
             //This loops through all active streaming platforms (Twitch, YouTube)
             for (let i in response.platforms){
-                //checks for bot user's for all active streams (UUDbot)
-                let botUser = response.platforms[i].botUserName
-                //checks for the broadcasters username in all active streams (UUDvideogames)
-                let broadcastUser = response.platforms[i].broadcastUserName
-                //If we find a bot match, discard the message.
-                ignoreList.push(botUser,broadcastUser)
+
+                if (response.platforms[i].botUserName){
+                    ignoreList.push(response.platforms[i].botUserName)
+                }
+
+                if (response.platforms[i].broadcastUserName){
+                    ignoreList.push(response.platforms[i].broadcastUserName)
+                }
+                
             }
             console.log("IGNORELIST : ",ignoreList)
             return ignoreList
