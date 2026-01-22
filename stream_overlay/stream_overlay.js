@@ -24,7 +24,7 @@ const client = new StreamerbotClient({
     onConnect: async (data) => {
         let message = 
         `
-        <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Chat Overlay Connected (v0.3.72)</span></b></span>
+        <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Chat Overlay Connected (v0.3.73)</span></b></span>
         `
         displayTemporaryMessage(message)
     }
@@ -418,25 +418,34 @@ function generateMessageId() {
 }
 
 function generateUniqueColor(userId) {
-    console.log("GIVING",userId,"COLOR")
-  // Simple seeding for consistency, could be more robust
-  let seed = userId.toString().split('').reduce((acc, digit) => acc + parseInt(digit), 0);
-  
-  // Generate RGB components from the seed
-  let r = (seed * 137) % 256; // Prime numbers help distribute colors
-  let g = (seed * 251) % 256;
-  let b = (seed * 31) % 256;
-  
-  // Ensure colors are reasonably bright (optional, but helpful)
-  // This avoids very dark or muddy colors by boosting low values
-  r = Math.max(r, 50); 
-  g = Math.max(g, 50); 
-  b = Math.max(b, 50); 
-  
-  // Convert to hex
-  let hexColor = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-  console.log("GENERARTED COL: ",hexColor)
-  return hexColor;
+    // Convert to string
+    const str = userId.toString();
+
+    // Create a numeric seed from character codes
+    let seed = 0;
+    for (let i = 0; i < str.length; i++) {
+        seed += str.charCodeAt(i);
+    }
+
+    // Generate RGB using different multipliers for variety
+    let r = (seed * 137) % 256;
+    let g = (seed * 251) % 256;
+    let b = (seed * 97) % 256;
+
+    // Ensure decent visibility
+    r = Math.max(r, 50);
+    g = Math.max(g, 50);
+    b = Math.max(b, 50);
+
+    // Format to hex
+    const hexColor =
+        '#' +
+        [r, g, b]
+        .map(x => x.toString(16).padStart(2, '0'))
+        .join('');
+
+    console.log('GENERATED COLOR:', hexColor);
+    return hexColor;
 }
 
 function getOrAssignColor(userId) {
