@@ -26,7 +26,7 @@ const client = new StreamerbotClient({
     },
     onConnect: async (data) => {
         displayAlertMessage(
-            '[CONNECTED] Chat Overlay Connected (v0.5.13)',
+            'Chat Overlay Connected (v0.5.20)',
             ['alertConnected'],
             5
         );
@@ -338,7 +338,6 @@ function displayTwitchChatMessage(data) {
   appendMessage(messageNode);
 }
 
-
 function displayYoutubeChatMessage(data) {
   const username = data.user.name;
   const chatColor = getOrAssignColor(username);
@@ -361,24 +360,6 @@ function displayAlertMessage(text, extraClasses = [], timeout = 20) {
   });
 
   appendMessage(alertNode, timeout);
-}
-
-function displayTemporaryMessage(message) {
-console.log(message)
-let newMessageDiv = document.createElement('div');
-let messageId = generateMessageId()
-newMessageDiv.id = messageId
-newMessageDiv.innerHTML = `
-<span class="message">${message}</span>`;
-
-newMessageDiv.className = 'chat-message';
-var chatBox = document.getElementById('messages');
-
-chatBox.appendChild(newMessageDiv);
-chatBox.scrollTop = chatBox.scrollHeight;
-
-deleteMessage(messageId, 1)
-
 }
 
 //deletes messages via ID after x time
@@ -464,7 +445,6 @@ function pruneMessages() {
     chatBox.removeChild(messages[0]); // remove oldest
   }
 }
-
 
 function parseTwitchMessage(message, emotes) {
   // No emotes → return text node
