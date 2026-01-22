@@ -106,6 +106,22 @@
             //dont change
             endpoint: '/', 
 
+            onError: (err) => {
+                console.log("ERROR\m",err)
+                let message = 
+                `
+                <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[ERROR!] ${JSON.stringify(err)}</span></b></span>
+                `
+                displayTemporaryMessage(message)
+            },
+            onConnect: async (data) => {
+                let message = 
+                `
+                <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Client connected succesfully! (v0.3.3)</span></b></span>
+                `
+                displayTemporaryMessage(message)
+            }
+
         });
 
         ////////////////////////
