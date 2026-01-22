@@ -25,10 +25,12 @@ Copy the below string and paste it into Streamer.bot via the IMPORT button at th
 
 You should have a window appear after this step that displays both your Twitch and YouTube chats.
 
-	1. in OBS at the top of the screen you will see the "Docks" tab. 
-	2. Click Docks > Custom Browser Dock
-	3. Under Dock Name enter a name that describes our app (Example: "UUDChatBot")
-	4. Under URL enter "https://uud-dev.github.io/"
+1. in OBS at the top of the screen you will see the "Docks" tab. 
+2. Click Docks > Custom Browser Dock
+3. Under Dock Name enter a name that describes our app (Example: "UUDChatBot")
+4. Under URL enter the following URL:
+		
+	"https://uud-dev.github.io/"
 
 
 ## Everything should be setup and ready!
