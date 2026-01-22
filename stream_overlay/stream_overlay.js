@@ -24,7 +24,7 @@ const client = new StreamerbotClient({
     onConnect: async (data) => {
         let message = 
         `
-        <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Chat Overlay Connected (v0.3.4)</span></b></span>
+        <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Chat Overlay Connected (v0.3.5)</span></b></span>
         `
         displayTemporaryMessage(message)
     }
