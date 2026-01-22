@@ -17,7 +17,7 @@ const client = new StreamerbotClient({
     endpoint: '/', 
 
     onError: (err) => {
-        console.log("ERROR\m",err)
+        console.log("ERROR\n",err)
         displayAlertMessage(
             `[ERROR!] ${JSON.stringify(err)}`,
             ['alertError'],
@@ -26,7 +26,7 @@ const client = new StreamerbotClient({
     },
     onConnect: async (data) => {
         displayAlertMessage(
-            'Chat Overlay Connected (v0.5.24.6)',
+            'Chat Overlay Connected (v0.5.24.61)',
             ['alertConnected'],
             5
         );
