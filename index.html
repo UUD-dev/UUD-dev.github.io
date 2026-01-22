@@ -410,7 +410,7 @@
             //This loops through all active streaming platforms (Twitch, YouTube)
             for (let i in response.platforms){
                 //checks for bot user's for all active streams (UUDbot)
-                let botUser = response.platforms[i].botUserName.toLowerCase()
+                let botUser = response.platforms[i].botUserName
                 //checks for the broadcasters username in all active streams (UUDvideogames)
                 let broadcastUser = response.platforms[i].broadcastUserName.toLowerCase()
                 //If we find a bot match, discard the message.
