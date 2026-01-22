@@ -446,6 +446,23 @@
             deleteMessage(messageId, 20)
 
         }
+        function displayTemporaryMessage(message) {
+
+        let newMessageDiv = document.createElement('div');
+        let messageId = generateMessageId()
+        newMessageDiv.id = messageId
+        newMessageDiv.innerHTML = `
+        <span class="message">${message}</span>`;
+
+        newMessageDiv.className = 'chat-message';
+        var chatBox = document.getElementById('messages');
+
+        chatBox.appendChild(newMessageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        deleteMessage(messageId, 10)
+
+        }
 
         //deletes messages via ID after x time
         function deleteMessage(msgId, timeout){
