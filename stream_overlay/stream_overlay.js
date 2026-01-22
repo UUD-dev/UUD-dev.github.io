@@ -26,7 +26,7 @@ const client = new StreamerbotClient({
     },
     onConnect: async (data) => {
         displayAlertMessage(
-            'Chat Overlay Connected (v0.5.24.7)',
+            'Chat Overlay Connected (v0.5.24.8)',
             ['alertConnected'],
             5
         );
@@ -314,42 +314,43 @@ function appendMessage(node, timeout = 0) {
 
 
 function displayTwitchChatMessage(data) {
-  const username = data.message.displayName;
-  const chatColor = getOrAssignColor(username);
-  const rawMessage = data.message.message;
+    const username = data.message.displayName;
+    const chatColor = getOrAssignColor(username);
+    const rawMessage = data.message.message;
+    const emotes = data.message.emotes;
 
-  const parsedMessage = parseTwitchMessage(
-    rawMessage,
-    data.message.emotes
-  );
+    // Parse the message into text nodes + emote images
+    const parsedMessage = parseTwitchMessage(rawMessage, emotes);
 
-  const classes = [];
-  if (data.message.firstMessage) classes.push('firstmessage');
-  if (data.message.isHighlighted) classes.push('highlighted');
+    // Classes for first message / highlighted
+    const classes = [];
+    if (data.message.firstMessage) classes.push('firstmessage');
+    if (data.message.isHighlighted) classes.push('highlighted');
 
-  const messageNode = createChatMessage({
-    icon: 'images/twitch.png',
-    username,
-    color: chatColor,
-    message: parsedMessage,
-    classes
-  });
+    // Create chat message node
+    const messageNode = createChatMessage({
+        icon: 'images/twitch.png',
+        username: username,
+        color: chatColor,
+        message: parsedMessage,
+        classes: classes
+    });
 
-  appendMessage(messageNode);
+    appendMessage(messageNode);
 }
 
 function displayYoutubeChatMessage(data) {
-  const username = data.user.name;
-  const chatColor = getOrAssignColor(username);
+    const username = data.user.name;
+    const chatColor = getOrAssignColor(username);
 
-  const messageNode = createChatMessage({
-    icon: 'images/youtube.png',
-    username,
-    color: chatColor,
-    message: data.message
-  });
+    const node = createChatMessage({
+        icon: 'images/youtube.png',
+        username,
+        color: chatColor,
+        message: data.message // YouTube doesn't have emotes here by default
+    });
 
-  appendMessage(messageNode);
+    appendMessage(node);
 }
 
 function displayAlertMessage(text, extraClasses = [], timeout = 20) {
@@ -442,13 +443,14 @@ function pruneMessages() {
 
 function parseTwitchMessage(message, emotes) {
     if (!emotes || Object.keys(emotes).length === 0) {
+        // No emotes, just return text
         return [document.createTextNode(message)];
     }
 
     const fragments = [];
     const emotePositions = [];
 
-    // Flatten emotes
+    // Flatten emote positions into an array
     for (const emoteId in emotes) {
         const positions = emotes[emoteId];
         if (Array.isArray(positions)) {
@@ -458,18 +460,18 @@ function parseTwitchMessage(message, emotes) {
         }
     }
 
-    // Sort emotes by start index
+    // Sort emotes by starting index
     emotePositions.sort((a, b) => a.start - b.start);
 
     let cursor = 0;
 
     emotePositions.forEach(emote => {
-        // Add text before emote
+        // Add any text before the emote
         if (cursor < emote.start) {
             fragments.push(document.createTextNode(message.slice(cursor, emote.start)));
         }
 
-        // Add emote image
+        // Add the emote image
         const img = document.createElement('img');
         img.src = `https://static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/1.0`;
         img.className = 'emote';
@@ -477,11 +479,11 @@ function parseTwitchMessage(message, emotes) {
         img.loading = 'lazy';
         fragments.push(img);
 
-        // Move cursor to **after the emote**
-        cursor = emote.end + 1; // still correct because slice is exclusive
+        // Move cursor after the emote
+        cursor = emote.end + 1;
     });
 
-    // Add any remaining text after last emote
+    // Add any remaining text after the last emote
     if (cursor < message.length) {
         fragments.push(document.createTextNode(message.slice(cursor)));
     }
