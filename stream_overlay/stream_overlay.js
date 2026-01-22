@@ -1,4 +1,7 @@
 const userColors = new Map();
+const MAX_MESSAGES = 50; // adjust for your overlay size
+
+
 ///////////////////////////////////////
 //CONNECTING TO THE STREAMER.BOT CLIENT
 ///////////////////////////////////////
@@ -15,18 +18,18 @@ const client = new StreamerbotClient({
 
     onError: (err) => {
         console.log("ERROR\m",err)
-        let message = 
-        `
-        <b><img class="icon" src="images/alert.png"> <span class="alertMessage">[ERROR!] ${JSON.stringify(err)}</span></b></span>
-        `
-        displayTemporaryMessage(message)
+        displayAlertMessage(
+            `[ERROR!] ${JSON.stringify(err)}`,
+            ['alertError'],
+            5
+        );
     },
     onConnect: async (data) => {
-        let message = 
-        `
-        <b><img class="icon" src="images/alert.png"> <span class="alertMessage">[CONNECTED] Chat Overlay Connected (v0.4.11)</span></b></span>
-        `
-        displayTemporaryMessage(message)
+        displayAlertMessage(
+            '[CONNECTED] Chat Overlay Connected (v0.5.13)',
+            ['alertConnected'],
+            5
+        );
     }
 
 });
@@ -112,12 +115,11 @@ client.on('YouTube.NewSubscriber', ({ event, data }) => {
     //set the username of the message sender.
     let username = data.data.user.name
 
-    let alertMessage = 
-    `
-    <b><img class="icon" src="images/alert.png"> <span class="alertMessage">${username} Just subscribed on YouTube!</span></b></span>
-    `
+    displayAlertMessage(
+        `${username} just subscribed on YouTube!`,
+        ['alertSub']
+    );
     
-    displayAlertMessage(alertMessage)
 
     
 });
@@ -129,11 +131,11 @@ client.on('YouTube.SuperChat', ({ event, data }) => {
 
     let username = data.data.user.name
     let message = data.data.message.message
-    let alertMessage = `
-    <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertSuperchat">[SUPERCHAT] ${username} : ${message}</span></b></span>
-    `
+    displayAlertMessage(
+        `[SUPERCHAT] ${username}: ${message}`,
+        ['alertSuperchat']
+    );
 
-    displayAlertMessage(alertMessage)
 });
 
 client.on('Twitch.Follow', ({ event, data }) => {
@@ -142,12 +144,10 @@ client.on('Twitch.Follow', ({ event, data }) => {
     console.log('Event data:', data);
 
     let username = data.user_name
-    let alertMessage = 
-    `
-    <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertFollow">${username} Just Followed on Twitch!</span></b></span>
-    `
-
-    displayAlertMessage(alertMessage)
+    displayAlertMessage(
+        `${username} Just Followed on Twitch!`,
+        ['alertFollow']
+    );
 
 });
 
@@ -159,12 +159,10 @@ client.on('Twitch.Cheer', ({ event, data }) => {
     let username = data.user.name
     let bits = data.bits
     let message = data.message
-    let alertMessage = 
-    `
-    <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertCheer">${username} Just cheered ${bits}Bits! (${message})</span></b></span>
-    `
-
-    displayAlertMessage(alertMessage)
+    displayAlertMessage(
+        `${username} Just cheered ${bits}Bits! (${message})`,
+        ['alertCheer']
+    );
 
 });
 
@@ -176,36 +174,28 @@ client.on('Twitch.CoinCheer', ({ event, data }) => {
     let username = data.user.name
     let bits = data.bits
     let message = data.message
-    let alertMessage = 
-    `
-    <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertCheer">${username} Just cheered ${bits}Bits! (${message})</span></b></span>
-    `
-
-    displayAlertMessage(alertMessage)
+    
+    displayAlertMessage(
+        `${username} just cheered ${bits} Bits! (${message})`,
+        ['alertCheer']
+    );
 
 });
 
-client.on('Twitch.GiftBomb', ({ event, data }) => {
-    // Code here will run every time the event is received!
-    console.log('Received event:', event.source, event.type);
-    console.log('Event data:', data);
+client.on('Twitch.GiftBomb', ({ data }) => {
+    const giftReceivers = data.recipients;
 
-    let giftReceivers = data.recipients
-    for (i in giftReceivers){
-        let username = i['name']
-        let alertMessage = 
-        `
-        <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertCheer">${username} Received a gifted sub!</span></b></span>
-        `
+    giftReceivers.forEach(receiver => {
+        displayAlertMessage(
+        `${receiver.name} received a gifted sub!`,
+        ['alertSub']
+        );
+    });
 
-        displayAlertMessage(alertMessage)
-    }
-    let alertMessage = 
-    `
-    <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertCheer">${data.user} gave out ${giftReceivers.length} Gifted Subs!</span></b></span>
-    `
-
-    displayAlertMessage(alertMessage)
+    displayAlertMessage(
+        `${data.user} gave out ${giftReceivers.length} gifted subs!`,
+        ['alertSub']
+    );
 });
 
 client.on('Twitch.GiftSub', ({ event, data }) => {
@@ -216,12 +206,10 @@ client.on('Twitch.GiftSub', ({ event, data }) => {
     let receiver = data.recipient.name
     let gifter = data.user.name
 
-    let alertMessage = 
-    `
-    <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertCheer">${receiver} Just scored a gifted sub from! ${gifter}</span></b></span>
-    `
-
-    displayAlertMessage(alertMessage)
+    displayAlertMessage(
+        `${receiver} received a gifted sub from ${gifter}!`,
+        ['alertSub']
+    );
 
 });
 
@@ -232,12 +220,10 @@ client.on('Twitch.ReSub', ({ event, data }) => {
 
     let username = data.user.name
     let subLength = data.user.monthsSubscribed
-    let alertMessage = 
-    `
-    <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertCheer">${username} Just re-Subscribed! (${subLength} months)</span></b></span>
-    `
-
-    displayAlertMessage(alertMessage)
+    displayAlertMessage(
+        `${username} just re-subscribed! (${subLength} months)`,
+        ['alertSub']
+    );
 
 });
 
@@ -248,114 +234,135 @@ client.on('Twitch.RewardRedemption', ({ event, data }) => {
 
     let username = data.user.name
     let subLength = data.user.monthsSubscribed
-    let alertMessage = 
-    `
-    <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertCheer">${username} Just re-Subscribed! (${subLength} months)</span></b></span>
-    `
-
-    displayAlertMessage(alertMessage)
+    displayAlertMessage(
+        `${username} redeemed a channel reward!`,
+        ['alertReward']
+    );
 });
 
 ///////////////////
 //MESSAGE FUNCTIONS
 ///////////////////
 
-function displayTwitchChatMessage(data) {
-    let username = data.message.displayName
-    console.log(username)
-    const chatColor = getOrAssignColor(username);
-    console.log("Chat Colour for ",username," : ",chatColor)
-    let message = data.message.message
+function createChatMessage({
+  icon = null,
+  username = null,
+  color = null,
+  message = '',
+  classes = []
+    }) {
+    const container = document.createElement('div');
+    container.classList.add('chat-message', ...classes);
 
-    let newMessageDiv = document.createElement('div');
-    let messageId = generateMessageId()
+    // Header (icon + username)
+    if (icon || username) {
+        const header = document.createElement('b');
+        header.className = 'chat-header';
 
-    let firstMessage = data.message.firstMessage
-    let isHighlighted = data.message.isHighlighted
+        if (icon) {
+        const img = document.createElement('img');
+        img.className = 'icon';
+        img.src = icon;
+        img.alt = '';
+        header.appendChild(img);
+        }
 
-    //check if this is a first time user or is highlighted!
-    if (firstMessage) newMessageDiv.classList.add('firstmessage');
-    if (isHighlighted) newMessageDiv.classList.add('highlighted');
+        if (username) {
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = username;
+        if (color) nameSpan.style.color = color;
+        header.appendChild(nameSpan);
+        header.append(':');
+        }
 
-    newMessageDiv.id = messageId
-
-    //Creates HTML string to display.
-    newMessageDiv.innerHTML = `
-    <div class="chat-message">
-    <b class="chat-header">
-        <img class="icon" src="images/youtube.png">
-        <span id="${username}" style="color:${chatColor}">
-        ${username}
-        </span>:
-    </b>
-    <span class="message">
-        ${message}
-    </span>
-    </div>
-    
-    `;
-
-    var chatBox = document.getElementById('messages');
-    chatBox.appendChild(newMessageDiv); 
-
-    chatBox.scrollTop = chatBox.scrollHeight;
-    deleteMessage(messageId, 0)
-
-}
-
-function displayYoutubeChatMessage(data) {
-    let username = data.user.name
-    const chatColor = getOrAssignColor(username);
-    let message = data.message
-    let newMessageDiv = document.createElement('div');
-    let messageId = generateMessageId()
-    newMessageDiv.id = messageId
-
-    newMessageDiv.innerHTML = `
-    <div class="chat-message">
-        <b>
-            <img class="icon" src="images/youtube.png">
-             
-            <span id="${username}" style="color:${chatColor}">
-                ${username}
-            </span>:
-        </b>
-        <span class="message">
-            ${message}
-        </span>
-    </div>
-    
-    `;
-    var chatBox = document.getElementById('messages');
-
-    chatBox.appendChild(newMessageDiv);
-
-    if (data.message.isHighlighted){
-        document.getElementById(messageId).style.backgroundColor = "#a12da5a4";	
+        container.appendChild(header);
     }
 
-    chatBox.scrollTop = chatBox.scrollHeight;
-    deleteMessage(messageId, 0)
+    // Message text
+    if (message) {
+        const messageSpan = document.createElement('span');
+        messageSpan.className = 'message';
 
+        if (Array.isArray(message)) {
+            message.forEach(node => messageSpan.appendChild(node));
+        } else {
+            messageSpan.textContent = message;
+        }
+
+        container.appendChild(messageSpan);
+    }
+
+
+    return container;
 }
 
-function displayAlertMessage(message) {
+function appendMessage(node, timeout = 0) {
+  const messageId = generateMessageId();
+  node.id = messageId;
 
-    let newMessageDiv = document.createElement('div');
-    let messageId = generateMessageId()
-    newMessageDiv.id = messageId
-    newMessageDiv.innerHTML = `
-    <span class="message">${message}</span>`;
+  const chatBox = document.getElementById('messages');
+  chatBox.appendChild(node);
 
-    newMessageDiv.className = 'chat-message';
-    var chatBox = document.getElementById('messages');
-    
-    chatBox.appendChild(newMessageDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
+  pruneMessages();
 
-    deleteMessage(messageId, 20)
+  chatBox.scrollTop = chatBox.scrollHeight;
 
+  if (timeout > 0) {
+    deleteMessage(messageId, timeout);
+  }
 }
+
+
+function displayTwitchChatMessage(data) {
+  const username = data.message.displayName;
+  const chatColor = getOrAssignColor(username);
+  const rawMessage = data.message.message;
+
+  const parsedMessage = parseTwitchMessage(
+    rawMessage,
+    data.message.emotes
+  );
+
+  const classes = [];
+  if (data.message.firstMessage) classes.push('firstmessage');
+  if (data.message.isHighlighted) classes.push('highlighted');
+
+  const messageNode = createChatMessage({
+    icon: 'images/twitch.png',
+    username,
+    color: chatColor,
+    message: parsedMessage,
+    classes
+  });
+
+  appendMessage(messageNode);
+}
+
+
+function displayYoutubeChatMessage(data) {
+  const username = data.user.name;
+  const chatColor = getOrAssignColor(username);
+
+  const messageNode = createChatMessage({
+    icon: 'images/youtube.png',
+    username,
+    color: chatColor,
+    message: data.message
+  });
+
+  appendMessage(messageNode);
+}
+
+function displayAlertMessage(text, extraClasses = [], timeout = 20) {
+  const alertNode = createChatMessage({
+    icon: 'images/alert.png',
+    message: text,
+    classes: ['alert', ...extraClasses]
+  });
+
+  appendMessage(alertNode, timeout);
+}
+
 function displayTemporaryMessage(message) {
 console.log(message)
 let newMessageDiv = document.createElement('div');
@@ -447,4 +454,69 @@ function getOrAssignColor(userId) {
     userColors.set(userId, color);
     return color;
   }
+}
+
+function pruneMessages() {
+  const chatBox = document.getElementById('messages');
+  const messages = chatBox.children;
+
+  while (messages.length > MAX_MESSAGES) {
+    chatBox.removeChild(messages[0]); // remove oldest
+  }
+}
+
+
+function parseTwitchMessage(message, emotes) {
+  // No emotes → return text node
+  if (!emotes || Object.keys(emotes).length === 0) {
+    return [document.createTextNode(message)];
+  }
+
+  const fragments = [];
+  const emotePositions = [];
+
+  // Flatten emote data
+  for (const emoteId in emotes) {
+    emotes[emoteId].forEach(pos => {
+      emotePositions.push({
+        id: emoteId,
+        start: pos.start,
+        end: pos.end
+      });
+    });
+  }
+
+  // Sort by position
+  emotePositions.sort((a, b) => a.start - b.start);
+
+  let cursor = 0;
+
+  emotePositions.forEach(emote => {
+    // Text before emote
+    if (cursor < emote.start) {
+      fragments.push(
+        document.createTextNode(message.slice(cursor, emote.start))
+      );
+    }
+
+    // Emote image
+    const img = document.createElement('img');
+    img.src = `https://static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/1.0`;
+    img.className = 'emote';
+    img.alt = '';
+    img.loading = 'lazy';
+
+    fragments.push(img);
+
+    cursor = emote.end + 1;
+  });
+
+  // Remaining text
+  if (cursor < message.length) {
+    fragments.push(
+      document.createTextNode(message.slice(cursor))
+    );
+  }
+
+  return fragments;
 }

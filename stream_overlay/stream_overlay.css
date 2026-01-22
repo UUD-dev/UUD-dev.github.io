@@ -57,3 +57,40 @@ body {
 .highlighted {
   background-color: #ea00ff7c;
 }
+
+.alert {
+  background-color: #2a2a2a;
+}
+
+.alertError {
+  border-left: 4px solid #ff4d4d;
+}
+
+.alertConnected {
+  border-left: 4px solid #4caf50;
+}
+
+.alertFollow {
+  border-left: 4px solid #9146ff;
+}
+
+.alertSub {
+  border-left: 4px solid #ff66cc;
+}
+
+.alertSuperchat {
+  border-left: 4px solid #ffcc00;
+}
+
+.alertCheer {
+  border-left: 4px solid #00e5ff;
+}
+
+.alertReward {
+  border-left: 4px solid #00ff88;
+}
+
+.emote {
+  height: 1.2em;
+  vertical-align: middle;
+}
