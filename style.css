@@ -1,89 +1,121 @@
-body { background-color: rgba(158, 48, 158, 0); margin: 0px auto; overflow: hidden; font-family: "Lucida Console", "Courier New", monospace;}
+/* =====================
+   BASE
+===================== */
+body {
+  margin: 0;
+  background: #111;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  overflow: hidden;
+}
 
-/* For WebKit browsers (Chrome, Safari, Opera, Edge) */
+/* Hide scrollbars */
 .hide-scrollbar::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
-
-/* For IE, Edge, and Firefox */
 .hide-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-#chat-box{
-opacity: 0.8;
-background-color: rgba(0, 0, 0, 0.4); /*Sets the background of chat to be slightly dark*/
-display: flex;
-flex-direction: column-reverse; /* Default for new messages at bottom */
-overflow-y: hidden; /* Or scroll */
-position: absolute; 
-float:left;
-width:100%;
-height:100%;
-vertical-align:bottom;
-font-size: 24px;
-color: white;
+/* =====================
+   CHAT CONTAINER
+===================== */
+#chat-box {
+  background-color: rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column-reverse;
+  position: absolute;
+  inset: 0;
+  font-size: 16px;
+  color: #e6e6e6;
 }
 
-#chat-box-header{
-opacity: 0.8;
-display: flex;
-flex-direction: column-reverse; /* Default for new messages at bottom */
-overflow-y: hidden; /* Or scroll */
-position: absolute; 
-top:0;
-right:0;
-float:left;
-font-size: 24px;
-color: rgba(255, 255, 255, 0.5);
+/* =====================
+   MESSAGE LIST
+===================== */
+#messages {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-
-#messages{
-padding: 10px;
-/* background-color: rgba(0, 0, 0, 0.116); */
-display: flex;
-flex-direction: column; /* Stacks new messages at the top */
-}
-/* Styles the main chat message container */
+/* =====================
+   MESSAGE ROW
+===================== */
 .chat-message {
-position:relative;
-background-color: #1e1e1e; /* Dark background for readability */
-color: #ffffff; /* Color for the message text */
-padding: 2px; /* Space around the message */
-margin-bottom: 2px; /* Space between messages */
-border-radius: 2px; /* Rounded corners */
-left:0;
-width:100%
+  padding: 4px 2px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* Styles the username within the message container */
-.username {
-font-weight: bold; /* Makes name stand out */
-margin-right: 5px; /* Space between name and message */
-}
-
-/* Styles the actual message content */
+/* =====================
+   MESSAGE CONTENT
+===================== */
 .message {
-word-wrap: break-word; /* Ensures long messages wrap correctly */
-margin: auto;
-width: 50%;
-
+  display: inline;
+  line-height: 1.45;
+  word-wrap: break-word;
 }
 
-.icon{
-margin: auto;
-width: 50%;
-height: auto; 
-width: auto; 
-max-width: 22px; 
-max-height: 22px;
+/* =====================
+   USERNAME
+===================== */
+.username {
+  font-weight: 600;
+  margin-right: 4px;
+  color: #ffffff;
 }
 
-.firstmessage{
-    background-color: #00ff407c; /* Dark background for readability */
+/* =====================
+   ICONS
+===================== */
+.icon {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  margin-right: 4px;
+  opacity: 0.85;
 }
-.highlighted{
-    background-color: #ea00ff7c; /* Dark background for readability */
+
+/* =====================
+   SPECIAL STATES
+===================== */
+.firstmessage {
+  background: rgba(0, 255, 136, 0.08);
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.highlighted {
+  background: rgba(200, 120, 255, 0.08);
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+/* =====================
+   ALERTS
+===================== */
+.alertMessage {
+  font-weight: 600;
+  color: #f0f0f0;
+}
+
+/* Optional subtle alert accent */
+.chat-message:has(.alertMessage) {
+  border-left: 3px solid rgba(255, 255, 255, 0.25);
+  padding-left: 6px;
+}
+
+/* =====================
+   READABILITY TWEAKS
+===================== */
+
+/* Slightly dim older messages */
+.chat-message:nth-last-child(n+25) {
+  opacity: 0.75;
+}
+
+/* Gentle hover (dock-only, optional) */
+.chat-message:hover {
+  background: rgba(255, 255, 255, 0.03);
 }
