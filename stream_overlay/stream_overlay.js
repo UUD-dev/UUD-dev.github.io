@@ -302,7 +302,7 @@ function displayTwitchChatMessage(data) {
     </div>
     
     `;
-
+    newMessageDiv.className = 'chat-message'; 
     var chatBox = document.getElementById('messages');
     chatBox.appendChild(newMessageDiv); 
 
@@ -334,7 +334,7 @@ function displayYoutubeChatMessage(data) {
     </div>
     
     `;
-
+    newMessageDiv.className = 'chat-message'; 
     var chatBox = document.getElementById('messages');
 
     chatBox.appendChild(newMessageDiv);
