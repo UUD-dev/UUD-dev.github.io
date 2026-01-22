@@ -98,9 +98,11 @@ img[src*="youtube"] {
    LOG PREFIX STYLE
 ===================== */
 .chat-message::before {
-  content: "> ";
+  content: ">";
   color: #6a9955;
+  margin-right: 4px;
 }
+
 
 /* =====================
    DIM OLD MESSAGES
