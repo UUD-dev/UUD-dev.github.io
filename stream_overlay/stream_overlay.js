@@ -261,6 +261,9 @@ console.log('Event data:', data);
 ///////////////////
 
 function displayTwitchChatMessage(data) {
+    let username = data.message.displayName
+    const chatColor = getOrAssignColor(username);
+    let message = data.message.message
 
     let newMessageDiv = document.createElement('div');
     let messageId = generateMessageId()
@@ -285,22 +288,23 @@ function displayTwitchChatMessage(data) {
 
     //Creates HTML string to display.
     newMessageDiv.innerHTML = `
-    <span class="message ${firstMessage} ${isHighlighted}">
-        <b><img class="icon" src="images/twitch.png"></img> <span class="username">${data.message.displayName}</span>:</b>
-        ${data.message.message}</span>
+    <div class="chat-message">
+        <b>
+            <img class="icon" src="images/youtube.png">
+            </img> 
+            <span id="${username}" style="color:${chatColor}">
+                ${username}
+            </span>:
+        </b>
+        <span class="message">
+            ${message}
+        </span>
+    </div>
     
     `;
-    newMessageDiv.className = 'chat-message'; 
+
     var chatBox = document.getElementById('messages');
-
     chatBox.appendChild(newMessageDiv); 
-
-    if (data.message.subscriber){
-        document.getElementById(messageId).style.color = "#a304a8";	
-    }
-    if (data.message.isHighlighted){
-        document.getElementById(messageId).style.backgroundColor = "#a12da5a4";	
-    }
 
     chatBox.scrollTop = chatBox.scrollHeight;
     deleteMessage(messageId, 0)
@@ -308,25 +312,33 @@ function displayTwitchChatMessage(data) {
 }
 
 function displayYoutubeChatMessage(data) {
-
+    let username = data.user.name
+    const chatColor = getOrAssignColor(username);
+    let message = data.message
     let newMessageDiv = document.createElement('div');
     let messageId = generateMessageId()
     newMessageDiv.id = messageId
 
     newMessageDiv.innerHTML = `
-    <span class="message">
-        <b><img class="icon" src="images/youtube.png"></img> <span class="username">${data.user.name}</span>:</b>
-        ${data.message}</span>
+    <div class="chat-message">
+        <b>
+            <img class="icon" src="images/youtube.png">
+            </img> 
+            <span id="${username}" style="color:${chatColor}">
+                ${username}
+            </span>:
+        </b>
+        <span class="message">
+            ${message}
+        </span>
+    </div>
     
     `;
-    newMessageDiv.className = 'chat-message'; 
+
     var chatBox = document.getElementById('messages');
 
     chatBox.appendChild(newMessageDiv);
 
-    if (data.message.subscriber){
-        document.getElementById(messageId).style.color = "#a304a8";	
-    }
     if (data.message.isHighlighted){
         document.getElementById(messageId).style.backgroundColor = "#a12da5a4";	
     }
@@ -401,4 +413,35 @@ function generateMessageId() {
     hexColor = `#${hexColor.padStart(6, '0')}`;
     
     return hexColor;
+}
+
+function generateUniqueColor(userId) {
+  // Simple seeding for consistency, could be more robust
+  let seed = userId.toString().split('').reduce((acc, digit) => acc + parseInt(digit), 0);
+  
+  // Generate RGB components from the seed
+  let r = (seed * 137) % 256; // Prime numbers help distribute colors
+  let g = (seed * 251) % 256;
+  let b = (seed * 31) % 256;
+  
+  // Ensure colors are reasonably bright (optional, but helpful)
+  // This avoids very dark or muddy colors by boosting low values
+  r = Math.max(r, 50); 
+  g = Math.max(g, 50); 
+  b = Math.max(b, 50); 
+  
+  // Convert to hex
+  return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+
+const userColors = new Map();
+
+function getOrAssignColor(userId) {
+  if (userColors.has(userId)) {
+    return userColors.get(userId);
+  } else {
+    const color = generateUniqueColor(userId);
+    userColors.set(userId, color);
+    return color;
+  }
 }
