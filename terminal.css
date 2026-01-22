@@ -25,11 +25,8 @@ body {
 /* =====================
    MESSAGE LIST
 ===================== */
-#messages {
-  padding: 8px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.message {
+  display: inline;
 }
 
 /* =====================
@@ -43,7 +40,9 @@ body {
    MESSAGE CONTENT
 ===================== */
 .chat-message {
-  white-space: pre-line;
+  display: flex;
+  align-items: baseline;
+  white-space: normal;
 }
 
 
@@ -102,7 +101,8 @@ img[src*="youtube"] {
   content: ">";
   color: #6a9955;
   margin-right: 0;
-  padding:0;
+  padding-right: 0;
+  flex-shrink: 0;
 }
 
 
