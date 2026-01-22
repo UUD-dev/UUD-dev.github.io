@@ -412,7 +412,7 @@
                 //checks for bot user's for all active streams (UUDbot)
                 let botUser = response.platforms[i].botUserName
                 //checks for the broadcasters username in all active streams (UUDvideogames)
-                let broadcastUser = response.platforms[i].broadcastUserName.toLowerCase()
+                let broadcastUser = response.platforms[i].broadcastUserName
                 //If we find a bot match, discard the message.
                 ignoreList.push(botUser,broadcastUser)
             }
