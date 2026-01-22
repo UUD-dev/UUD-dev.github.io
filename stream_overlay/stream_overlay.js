@@ -26,7 +26,7 @@ const client = new StreamerbotClient({
     },
     onConnect: async (data) => {
         displayAlertMessage(
-            'Chat Overlay Connected (v0.5.22)',
+            'Chat Overlay Connected (v0.5.23)',
             ['alertConnected'],
             5
         );
@@ -314,8 +314,8 @@ function appendMessage(node, timeout = 0) {
 
 
 function displayTwitchChatMessage(data) {
-  const twitchUsername = data.message.displayName;
-  const chatColor = getOrAssignColor(twitchUsername);
+  const username = data.message.displayName;
+  const chatColor = getOrAssignColor(username);
   const rawMessage = data.message.message;
 
   const parsedMessage = parseTwitchMessage(
@@ -329,7 +329,7 @@ function displayTwitchChatMessage(data) {
 
   const messageNode = createChatMessage({
     icon: 'images/twitch.png',
-    twitchUsername,
+    username,
     color: chatColor,
     message: parsedMessage,
     classes
@@ -339,12 +339,12 @@ function displayTwitchChatMessage(data) {
 }
 
 function displayYoutubeChatMessage(data) {
-  const youtubeUsername = data.user.name;
-  const chatColor = getOrAssignColor(youtubeUsername);
+  const username = data.user.name;
+  const chatColor = getOrAssignColor(username);
 
   const messageNode = createChatMessage({
     icon: 'images/youtube.png',
-    youtubeUsername,
+    username,
     color: chatColor,
     message: data.message
   });
