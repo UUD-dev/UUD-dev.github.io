@@ -17,14 +17,14 @@ const client = new StreamerbotClient({
         console.log("ERROR\m",err)
         let message = 
         `
-        <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[ERROR!] ${JSON.stringify(err)}</span></b></span>
+        <b><img class="icon" src="images/alert.png"> <span class="alertMessage">[ERROR!] ${JSON.stringify(err)}</span></b></span>
         `
         displayTemporaryMessage(message)
     },
     onConnect: async (data) => {
         let message = 
         `
-        <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Chat Overlay Connected (v0.4.01)</span></b></span>
+        <b><img class="icon" src="images/alert.png"> <span class="alertMessage">[CONNECTED] Chat Overlay Connected (v0.4.10)</span></b></span>
         `
         displayTemporaryMessage(message)
     }
@@ -114,7 +114,7 @@ client.on('YouTube.NewSubscriber', ({ event, data }) => {
 
     let alertMessage = 
     `
-    <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">${username} Just subscribed on YouTube!</span></b></span>
+    <b><img class="icon" src="images/alert.png"> <span class="alertMessage">${username} Just subscribed on YouTube!</span></b></span>
     `
     
     displayAlertMessage(alertMessage)
@@ -130,7 +130,7 @@ client.on('YouTube.SuperChat', ({ event, data }) => {
     let username = data.data.user.name
     let message = data.data.message.message
     let alertMessage = `
-    <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage alertSuperchat">[SUPERCHAT] ${username} : ${message}</span></b></span>
+    <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertSuperchat">[SUPERCHAT] ${username} : ${message}</span></b></span>
     `
 
     displayAlertMessage(alertMessage)
@@ -144,7 +144,7 @@ client.on('Twitch.Follow', ({ event, data }) => {
     let username = data.user_name
     let alertMessage = 
     `
-    <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage alertFollow">${username} Just Followed on Twitch!</span></b></span>
+    <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertFollow">${username} Just Followed on Twitch!</span></b></span>
     `
 
     displayAlertMessage(alertMessage)
@@ -161,7 +161,7 @@ client.on('Twitch.Cheer', ({ event, data }) => {
     let message = data.message
     let alertMessage = 
     `
-    <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage alertCheer">${username} Just cheered ${bits}Bits! (${message})</span></b></span>
+    <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertCheer">${username} Just cheered ${bits}Bits! (${message})</span></b></span>
     `
 
     displayAlertMessage(alertMessage)
@@ -178,7 +178,7 @@ client.on('Twitch.CoinCheer', ({ event, data }) => {
     let message = data.message
     let alertMessage = 
     `
-    <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage alertCheer">${username} Just cheered ${bits}Bits! (${message})</span></b></span>
+    <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertCheer">${username} Just cheered ${bits}Bits! (${message})</span></b></span>
     `
 
     displayAlertMessage(alertMessage)
@@ -195,14 +195,14 @@ client.on('Twitch.GiftBomb', ({ event, data }) => {
         let username = i['name']
         let alertMessage = 
         `
-        <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage alertCheer">${username} Received a gifted sub!</span></b></span>
+        <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertCheer">${username} Received a gifted sub!</span></b></span>
         `
 
         displayAlertMessage(alertMessage)
     }
     let alertMessage = 
     `
-    <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage alertCheer">${data.user} gave out ${giftReceivers.length} Gifted Subs!</span></b></span>
+    <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertCheer">${data.user} gave out ${giftReceivers.length} Gifted Subs!</span></b></span>
     `
 
     displayAlertMessage(alertMessage)
@@ -218,7 +218,7 @@ client.on('Twitch.GiftSub', ({ event, data }) => {
 
     let alertMessage = 
     `
-    <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage alertCheer">${receiver} Just scored a gifted sub from! ${gifter}</span></b></span>
+    <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertCheer">${receiver} Just scored a gifted sub from! ${gifter}</span></b></span>
     `
 
     displayAlertMessage(alertMessage)
@@ -234,7 +234,7 @@ client.on('Twitch.ReSub', ({ event, data }) => {
     let subLength = data.user.monthsSubscribed
     let alertMessage = 
     `
-    <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage alertCheer">${username} Just re-Subscribed! (${subLength} months)</span></b></span>
+    <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertCheer">${username} Just re-Subscribed! (${subLength} months)</span></b></span>
     `
 
     displayAlertMessage(alertMessage)
@@ -250,7 +250,7 @@ client.on('Twitch.RewardRedemption', ({ event, data }) => {
     let subLength = data.user.monthsSubscribed
     let alertMessage = 
     `
-    <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage alertCheer">${username} Just re-Subscribed! (${subLength} months)</span></b></span>
+    <b><img class="icon" src="images/alert.png"> <span class="alertMessage alertCheer">${username} Just re-Subscribed! (${subLength} months)</span></b></span>
     `
 
     displayAlertMessage(alertMessage)
@@ -273,38 +273,28 @@ function displayTwitchChatMessage(data) {
     let firstMessage = data.message.firstMessage
     let isHighlighted = data.message.isHighlighted
 
-    //check if this is a first time user!
-    if (firstMessage){
-        firstMessage = "firstMessage"
-    }else{
-        firstMessage = ""
-    }
-
-    if (isHighlighted){
-        isHighlighted = "highlighted"
-    }else{
-        isHighlighted = ""
-    }
+    //check if this is a first time user or is highlighted!
+    if (firstMessage) newMessageDiv.classList.add('firstmessage');
+    if (isHighlighted) newMessageDiv.classList.add('highlighted');
 
     newMessageDiv.id = messageId
 
     //Creates HTML string to display.
     newMessageDiv.innerHTML = `
     <div class="chat-message">
-        <b>
-            <img class="icon" src="images/youtube.png">
-            </img> 
-            <span id="${username}" style="color:${chatColor}">
-                ${username}
-            </span>:
-        </b>
-        <span class="message">
-            ${message}
-        </span>
+    <b class="chat-header">
+        <img class="icon" src="images/youtube.png">
+        <span id="${username}" style="color:${chatColor}">
+        ${username}
+        </span>:
+    </b>
+    <span class="message">
+        ${message}
+    </span>
     </div>
     
     `;
-    newMessageDiv.className = 'chat-message'; 
+
     var chatBox = document.getElementById('messages');
     chatBox.appendChild(newMessageDiv); 
 
@@ -325,7 +315,7 @@ function displayYoutubeChatMessage(data) {
     <div class="chat-message">
         <b>
             <img class="icon" src="images/youtube.png">
-            </img> 
+             
             <span id="${username}" style="color:${chatColor}">
                 ${username}
             </span>:
@@ -336,7 +326,6 @@ function displayYoutubeChatMessage(data) {
     </div>
     
     `;
-    newMessageDiv.className = 'chat-message'; 
     var chatBox = document.getElementById('messages');
 
     chatBox.appendChild(newMessageDiv);
