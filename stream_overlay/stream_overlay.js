@@ -433,7 +433,9 @@ function generateUniqueColor(userId) {
   b = Math.max(b, 50); 
   
   // Convert to hex
-  return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  let hexColor = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  console.log("GENERARTED COL: ",hexColor)
+  return hexColor;
 }
 
 function getOrAssignColor(userId) {
