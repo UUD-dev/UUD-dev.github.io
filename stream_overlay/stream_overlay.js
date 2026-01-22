@@ -26,7 +26,7 @@ const client = new StreamerbotClient({
     },
     onConnect: async (data) => {
         displayAlertMessage(
-            'Chat Overlay Connected (v0.5.23)',
+            'Chat Overlay Connected (v0.5.24)',
             ['alertConnected'],
             5
         );
@@ -447,49 +447,59 @@ function pruneMessages() {
 }
 
 function parseTwitchMessage(message, emotes) {
-  if (!emotes || Object.keys(emotes).length === 0) {
-    return [document.createTextNode(message)];
-  }
-
-  const fragments = [];
-  const emotePositions = [];
-
-  // Normalize emote data
-  if (Array.isArray(emotes)) {
-    // Array format
-    emotes.forEach(e => {
-      emotePositions.push({
-        id: e.id,
-        start: e.start,
-        end: e.end
-      });
-    });
-  } else {
-    // Object format
-    for (const emoteId in emotes) {
-      const e = emotes[emoteId];
-
-      // Single object
-      if (typeof e.start === 'number') {
-        emotePositions.push({
-          id: emoteId,
-          start: e.start,
-          end: e.end
-        });
-      }
-
-      // Array of positions
-      else if (Array.isArray(e)) {
-        e.forEach(pos => {
-          emotePositions.push({
-            id: emoteId,
-            start: pos.start,
-            end: pos.end
-          });
-        });
-      }
+    if (!emotes || Object.keys(emotes).length === 0) {
+        return [document.createTextNode(message)];
     }
-  }
+
+    const fragments = [];
+    const emotePositions = [];
+
+    // Flatten emotes
+    if (Array.isArray(emotes)) {
+        // Rare case, keep same as before
+        emotes.forEach(e => {
+            emotePositions.push({ id: e.id, start: e.start, end: e.end });
+        });
+    } else {
+        for (const emoteId in emotes) {
+            const e = emotes[emoteId];
+            if (Array.isArray(e)) {
+                e.forEach(pos => emotePositions.push({ id: emoteId, start: pos.start, end: pos.end }));
+            } else if (typeof e.start === 'number') {
+                emotePositions.push({ id: emoteId, start: e.start, end: e.end });
+            }
+        }
+    }
+
+    // Sort by position
+    emotePositions.sort((a, b) => a.start - b.start);
+
+    let cursor = 0;
+    for (const emote of emotePositions) {
+        // Text before emote
+        if (cursor < emote.start) {
+            fragments.push(document.createTextNode(message.slice(cursor, emote.start)));
+        }
+
+        // Emote image
+        const img = document.createElement('img');
+        img.src = `https://static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/1.0`;
+        img.className = 'emote';
+        img.alt = '';
+        img.loading = 'lazy';
+        fragments.push(img);
+
+        cursor = emote.end + 1;
+    }
+
+    // Any remaining text after the last emote
+    if (cursor < message.length) {
+        fragments.push(document.createTextNode(message.slice(cursor)));
+    }
+
+    return fragments;
+}
+
 
   // Sort by position
   emotePositions.sort((a, b) => a.start - b.start);
