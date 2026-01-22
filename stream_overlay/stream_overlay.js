@@ -26,7 +26,7 @@ const client = new StreamerbotClient({
     },
     onConnect: async (data) => {
         displayAlertMessage(
-            'Chat Overlay Connected (v0.6.0.0)',
+            'Chat Overlay Connected (v0.6.0.1)',
             ['alertConnected'],
             5
         );
@@ -59,13 +59,13 @@ client.on('Twitch.ChatMessage', async (data) => {
         
         //If we find a bot match, discard the message.
         if (username == botUser){
-            console.log("USER MATCH BOT ACCOUNT, IGNORING",username) 
+            // console.log("USER MATCH BOT ACCOUNT, IGNORING",username) 
             return
         }
 
         //If we find a broadcaster match, discard the message.
         if (username == broadcastUser){
-            console.log("USER MATCH BROADCAST ACCOUNT, IGNORING",username) 
+            // console.log("USER MATCH BROADCAST ACCOUNT, IGNORING",username) 
             return
         }
     }
@@ -94,13 +94,13 @@ client.on('YouTube.Message', async (data) => {
 
         //If we find a bot match, discard the message.
         if (username == botUser){
-            console.log("USER MATCH BOT ACCOUNT, IGNORING",botUser)
+            // console.log("USER MATCH BOT ACCOUNT, IGNORING",botUser)
             return
         }
 
         //If we find a broadcaster match, discard the message.
         if (username == broadcastUser){
-            console.log("USER MATCH BROADCAST ACCOUNT, IGNORING",botUser)
+            // console.log("USER MATCH BROADCAST ACCOUNT, IGNORING",botUser)
             return
         }
     }
@@ -110,8 +110,8 @@ client.on('YouTube.Message', async (data) => {
 });
 
 client.on('YouTube.NewSubscriber', ({ event, data }) => {
-    console.log('Received event:', event.source, event.type);
-    console.log('Event data:', data);
+    // console.log('Received event:', event.source, event.type);
+    // console.log('Event data:', data);
     //set the username of the message sender.
     let username = data.data.user.name
 
@@ -125,10 +125,6 @@ client.on('YouTube.NewSubscriber', ({ event, data }) => {
 });
 
 client.on('YouTube.SuperChat', ({ event, data }) => {
-    // Code here will run every time the event is received!
-    console.log('Received event:', event.source, event.type);
-    console.log('Event data:', data);
-
     let username = data.data.user.name
     let message = data.data.message.message
     displayAlertMessage(
@@ -139,10 +135,6 @@ client.on('YouTube.SuperChat', ({ event, data }) => {
 });
 
 client.on('Twitch.Follow', ({ event, data }) => {
-    // Code here will run every time the event is received!
-    console.log('Received event:', event.source, event.type);
-    console.log('Event data:', data);
-
     let username = data.user_name
     displayAlertMessage(
         `${username} Just Followed on Twitch!`,
@@ -152,10 +144,6 @@ client.on('Twitch.Follow', ({ event, data }) => {
 });
 
 client.on('Twitch.Cheer', ({ event, data }) => {
-    // Code here will run every time the event is received!
-    console.log('Received event:', event.source, event.type);
-    console.log('Event data:', data);
-
     let username = data.user.name
     let bits = data.bits
     let message = data.message
@@ -167,10 +155,6 @@ client.on('Twitch.Cheer', ({ event, data }) => {
 });
 
 client.on('Twitch.CoinCheer', ({ event, data }) => {
-    // Code here will run every time the event is received!
-    console.log('Received event:', event.source, event.type);
-    console.log('Event data:', data);
-
     let username = data.user.name
     let bits = data.bits
     let message = data.message
@@ -199,10 +183,6 @@ client.on('Twitch.GiftBomb', ({ data }) => {
 });
 
 client.on('Twitch.GiftSub', ({ event, data }) => {
-
-    console.log('Received event:', event.source, event.type);
-    console.log('Event data:', data);
-
     let receiver = data.recipient.name
     let gifter = data.user.name
 
@@ -214,10 +194,6 @@ client.on('Twitch.GiftSub', ({ event, data }) => {
 });
 
 client.on('Twitch.ReSub', ({ event, data }) => {
-
-    console.log('Received event:', event.source, event.type);
-    console.log('Event data:', data);
-
     let username = data.user.name
     let subLength = data.user.monthsSubscribed
     displayAlertMessage(
@@ -228,10 +204,6 @@ client.on('Twitch.ReSub', ({ event, data }) => {
 });
 
 client.on('Twitch.RewardRedemption', ({ event, data }) => {
-    // Code here will run every time the event is received!
-    console.log('Received event:', event.source, event.type);
-    console.log('Event data:', data);
-
     let username = data.user.name
     let subLength = data.user.monthsSubscribed
     displayAlertMessage(
@@ -314,43 +286,53 @@ function appendMessage(node, timeout = 0) {
 
 
 function displayTwitchChatMessage(data) {
-  const username = data.message.displayName;
-  const chatColor = getOrAssignColor(username);
-  const rawMessage = data.message.message;
+    const username = data.message.displayName;
+    const chatColor = getOrAssignColor(username);
 
-  const parsedMessage = parseTwitchMessage(
-    rawMessage,
-    data.message.emotes
-  );
+    const rawMessage = sanitizeChatText(
+        data.message.message,
+        { maxLength: 300 }
+    );
 
-  const classes = [];
-  if (data.message.firstMessage) classes.push('firstmessage');
-  if (data.message.isHighlighted) classes.push('highlighted');
+    const parsedMessage = parseTwitchMessage(
+        rawMessage,
+        data.message.emotes
+    );
 
-  const messageNode = createChatMessage({
-    icon: 'images/twitch.png',
-    username,
-    color: chatColor,
-    message: parsedMessage,
-    classes
-  });
+    const classes = [];
+    if (data.message.firstMessage) classes.push('firstmessage');
+    if (data.message.isHighlighted) classes.push('highlighted');
 
-  appendMessage(messageNode);
+    const messageNode = createChatMessage({
+        icon: 'images/twitch.png',
+        username,
+        color: chatColor,
+        message: parsedMessage,
+        classes
+    });
+
+    appendMessage(messageNode);
 }
+
 
 function displayYoutubeChatMessage(data) {
-  const username = data.user.name;
-  const chatColor = getOrAssignColor(username);
+    const username = data.user.name;
+    const chatColor = getOrAssignColor(username);
 
-  const messageNode = createChatMessage({
-    icon: 'images/youtube.png',
-    username,
-    color: chatColor,
-    message: data.message
-  });
+    const safeMessage = sanitizeChatText(data.message, {
+        maxLength: 300
+    });
 
-  appendMessage(messageNode);
+    const messageNode = createChatMessage({
+        icon: 'images/youtube.png',
+        username,
+        color: chatColor,
+        message: safeMessage
+    });
+
+    appendMessage(messageNode);
 }
+
 
 function displayAlertMessage(text, extraClasses = [], timeout = 20) {
   const alertNode = createChatMessage({
@@ -369,7 +351,7 @@ function deleteMessage(msgId, timeout){
         setTimeout(() => {
                 const msgElement = document.getElementById(msgId);
                 if (msgElement) {
-                        console.log("REMOVING MESSAGE",msgId)
+                        // console.log("REMOVING MESSAGE",msgId)
                         msgElement.remove(); // Or msgElement.style.display = 'none'; to hide it
                         // console.log(`Message ${messageId} removed.`);
                 }
@@ -414,18 +396,18 @@ function generateUniqueColor(userId) {
     // Return an HSL color string
     const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 
-    console.log('GENERATED COLOR:', color, 'for user:', userId);
+    // console.log('GENERATED COLOR:', color, 'for user:', userId);
     return color;
 }
 
 
 function getOrAssignColor(userId) {
   if (userColors.has(userId)) {
-    console.log("USER HAS COLOR:",userId,userColors.get(userId))
+    // console.log("USER HAS COLOR:",userId,userColors.get(userId))
     return userColors.get(userId);
   } else {
     const color = generateUniqueColor(userId);
-    console.log("GENERATED COLOR: ",color,userId)
+    // console.log("GENERATED COLOR: ",color,userId)
     userColors.set(userId, color);
     return color;
   }
@@ -533,6 +515,36 @@ function parseIrcStyleEmotes(message, emotes) {
 }
 
 
+function sanitizeChatText(text, options = {}) {
+    const {
+        maxLength = 300,
+        removeZeroWidth = true,
+        normalizeWhitespace = true
+    } = options;
 
+    if (typeof text !== 'string') return '';
+
+    let clean = text;
+
+    // Remove zero-width & invisible characters
+    if (removeZeroWidth) {
+        clean = clean.replace(/[\u200B-\u200D\uFEFF\u2060]/g, '');
+    }
+
+    // Remove bidi override characters (text direction exploits)
+    clean = clean.replace(/[\u202A-\u202E\u2066-\u2069]/g, '');
+
+    // Normalize whitespace
+    if (normalizeWhitespace) {
+        clean = clean.replace(/\s+/g, ' ').trim();
+    }
+
+    // Hard length limit (prevents lag spam)
+    if (clean.length > maxLength) {
+        clean = clean.slice(0, maxLength) + '…';
+    }
+
+    return clean;
+}
   
 
