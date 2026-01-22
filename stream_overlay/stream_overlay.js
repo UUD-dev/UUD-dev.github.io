@@ -26,7 +26,7 @@ const client = new StreamerbotClient({
     },
     onConnect: async (data) => {
         displayAlertMessage(
-            'Chat Overlay Connected (v0.5.24.5)',
+            'Chat Overlay Connected (v0.6.0.0)',
             ['alertConnected'],
             5
         );
@@ -441,41 +441,78 @@ function pruneMessages() {
 }
 
 function parseTwitchMessage(message, emotes) {
-    if (!emotes || Object.keys(emotes).length === 0) {
+    if (!emotes || emotes.length === 0) {
         return [document.createTextNode(message)];
     }
 
     const fragments = [];
-    const emotePositions = [];
 
-    // Flatten emotes
+    // Normalize emotes into { id, name } objects
+    const normalizedEmotes = [];
+
     if (Array.isArray(emotes)) {
-        // Rare case, keep same as before
         emotes.forEach(e => {
-            emotePositions.push({ id: e.id, start: e.start, end: e.end });
+            if (typeof e === 'string') {
+                normalizedEmotes.push({ id: e });
+            } else if (typeof e === 'object' && e.id) {
+                normalizedEmotes.push({ id: e.id, name: e.name });
+            }
         });
     } else {
-        for (const emoteId in emotes) {
-            const e = emotes[emoteId];
-            if (Array.isArray(e)) {
-                e.forEach(pos => emotePositions.push({ id: emoteId, start: pos.start, end: pos.end }));
-            } else if (typeof e.start === 'number') {
-                emotePositions.push({ id: emoteId, start: e.start, end: e.end });
-            }
-        }
+        // IRC-style object { id: ["0-4"] }
+        return parseIrcStyleEmotes(message, emotes);
     }
 
-    // Sort by position
+    // Word-based parsing
+    const tokens = message.split(/(\s+)/);
+
+    tokens.forEach(token => {
+        const emote = normalizedEmotes.find(e => e.name === token);
+
+        if (emote) {
+            const img = document.createElement('img');
+            img.src = `https://static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/1.0`;
+            img.className = 'emote';
+            img.alt = token;
+            img.loading = 'lazy';
+            fragments.push(img);
+        } else {
+            fragments.push(document.createTextNode(token));
+        }
+    });
+
+    return fragments;
+}
+
+function parseIrcStyleEmotes(message, emotes) {
+    const fragments = [];
+    const emotePositions = [];
+
+    for (const emoteId in emotes) {
+        const ranges = emotes[emoteId];
+        if (!Array.isArray(ranges)) continue;
+
+        ranges.forEach(range => {
+            const [start, end] = range.split('-').map(Number);
+            emotePositions.push({ id: emoteId, start, end });
+        });
+    }
+
+    if (emotePositions.length === 0) {
+        return [document.createTextNode(message)];
+    }
+
     emotePositions.sort((a, b) => a.start - b.start);
 
     let cursor = 0;
+
     for (const emote of emotePositions) {
-        // Text before emote
         if (cursor < emote.start) {
-            fragments.push(document.createTextNode(message.slice(cursor, emote.start)));
+            fragments.push(
+                document.createTextNode(message.slice(cursor, emote.start))
+            );
         }
 
-        // Emote image
         const img = document.createElement('img');
         img.src = `https://static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/1.0`;
         img.className = 'emote';
@@ -486,13 +523,16 @@ function parseTwitchMessage(message, emotes) {
         cursor = emote.end + 1;
     }
 
-    // Any remaining text after the last emote
     if (cursor < message.length) {
-        fragments.push(document.createTextNode(message.slice(cursor)));
+        fragments.push(
+            document.createTextNode(message.slice(cursor))
+        );
     }
 
     return fragments;
 }
+
+
 
   
 
