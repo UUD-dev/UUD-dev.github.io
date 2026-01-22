@@ -1,4 +1,4 @@
-
+const userColors = new Map();
 ///////////////////////////////////////
 //CONNECTING TO THE STREAMER.BOT CLIENT
 ///////////////////////////////////////
@@ -242,9 +242,9 @@ client.on('Twitch.ReSub', ({ event, data }) => {
 });
 
 client.on('Twitch.RewardRedemption', ({ event, data }) => {
-// Code here will run every time the event is received!
-console.log('Received event:', event.source, event.type);
-console.log('Event data:', data);
+    // Code here will run every time the event is received!
+    console.log('Received event:', event.source, event.type);
+    console.log('Event data:', data);
 
     let username = data.user.name
     let subLength = data.user.monthsSubscribed
@@ -263,6 +263,7 @@ console.log('Event data:', data);
 function displayTwitchChatMessage(data) {
     let username = data.message.displayName
     const chatColor = getOrAssignColor(username);
+    console.log("Chat Colour for ".username," : ",chatColor)
     let message = data.message.message
 
     let newMessageDiv = document.createElement('div');
@@ -433,8 +434,6 @@ function generateUniqueColor(userId) {
   // Convert to hex
   return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
-
-const userColors = new Map();
 
 function getOrAssignColor(userId) {
   if (userColors.has(userId)) {
