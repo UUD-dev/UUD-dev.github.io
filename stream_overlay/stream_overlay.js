@@ -1,6 +1,6 @@
 const userColors = new Map();
 const MAX_MESSAGES = 50; // adjust for your overlay size
-
+var ignoreList = []
 
 ///////////////////////////////////////
 //CONNECTING TO THE STREAMER.BOT CLIENT
@@ -26,6 +26,10 @@ const client = new StreamerbotClient({
     },
     onConnect: async (data) => {
         console.log('connected')
+        await updateExcluded()
+        setInterval(async() => {
+                    await updateExcluded()
+                }, 1000*60*5);
         displayAlertMessage(
             'Chat Overlay Connected (v0.6.0.3)',
             ['alertConnected'],
@@ -46,33 +50,13 @@ client.on('Twitch.ChatMessage', async (data) => {
     //set the username of the message sender.
     let username = data.data.user.name 
 
-    // retreive the broadcaster information from Streamer.bot
-    const response = await client.getBroadcaster(); 
-
-    //This loops through all active streaming platforms (Twitch, YouTube)
-    for (i in response.platforms){
-
-        //checks for bot user's for all active streams (UUDbot)
-        let botUser = response.platforms[i].botUserName 
-
-        //checks for the broadcasters username in all active streams (UUDvideogames)
-        let broadcastUser = response.platforms[i].broadcastUserName 
-        
-        //If we find a bot match, discard the message.
-        if (username == botUser){
-            // console.log("USER MATCH BOT ACCOUNT, IGNORING",username) 
-            return
-        }
-
-        //If we find a broadcaster match, discard the message.
-        if (username == broadcastUser){
-            // console.log("USER MATCH BROADCAST ACCOUNT, IGNORING",username) 
-            return
-        }
+    //check to see if we should ignore this message
+    if (ignoreList.includes(username.toString().toLowerCase())){
+        return
+    }else{
+        displayTwitchChatMessage(data.data)
     }
-    
-    // Send the chat data to our function to handle displaying twitch messages in the overlay.
-    displayTwitchChatMessage(data.data)				
+    				
 });
 
 //This function runs when we detect a youtube chat message has been sent.
@@ -81,33 +65,12 @@ client.on('YouTube.Message', async (data) => {
     //set the username of the message sender.
     let username = data.data.user.name
 
-    // retreive the broadcaster information from Streamer.bot
-    const response = await client.getBroadcaster();
-
-    //This loops through all active streaming platforms (Twitch, YouTube)
-    for (i in response.platforms){
-
-        //checks for bot user's for all active streams (UUDbot)
-        let botUser = response.platforms[i].botUserName
-
-        //checks for the broadcasters username in all active streams (UUDvideogames)
-        let broadcastUser = response.platforms[i].broadcastUserName
-
-        //If we find a bot match, discard the message.
-        if (username == botUser){
-            // console.log("USER MATCH BOT ACCOUNT, IGNORING",botUser)
-            return
-        }
-
-        //If we find a broadcaster match, discard the message.
-        if (username == broadcastUser){
-            // console.log("USER MATCH BROADCAST ACCOUNT, IGNORING",botUser)
-            return
-        }
+    if (ignoreList.includes(username.toString().toLowerCase())){
+        return
+    }else{
+        displayYoutubeChatMessage(data.data)
     }
-
-    // Send the chat data to our function to handle displaying youtube messages in the overlay.
-    displayYoutubeChatMessage(data.data)							   
+							   
 });
 
 client.on('YouTube.NewSubscriber', ({ event, data }) => {
@@ -548,4 +511,25 @@ function sanitizeChatText(text, options = {}) {
     return clean;
 }
   
+async function updateExcluded(){
+            //reset the array
+            ignoreList = ['Streamelements', 'NightBot']
+            // retreive the broadcaster information from Streamer.bot
+            const response = await client.getBroadcaster(); 
+            // console.log("response",response)
+            // console.log(response.platforms)
+            //This loops through all active streaming platforms (Twitch, YouTube)
+            for (let i in response.platforms){
 
+                if (response.platforms[i].botUserName){
+                    ignoreList.push(response.platforms[i].botUserName)
+                }
+
+                if (response.platforms[i].broadcastUserName){
+                    ignoreList.push(response.platforms[i].broadcastUserName)
+                }
+                
+            }
+            console.log("IGNORELIST : ",ignoreList)
+            return ignoreList
+        }
