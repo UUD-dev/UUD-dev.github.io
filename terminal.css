@@ -1,0 +1,120 @@
+/* =====================
+   TERMINAL BASE
+===================== */
+body {
+  margin: 0;
+  background: #0b0b0b;
+  color: #d0d0d0;
+  font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  overflow: hidden;
+}
+
+/* =====================
+   CHAT CONTAINER
+===================== */
+#chat-box {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column-reverse;
+  background: #0b0b0b;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+/* =====================
+   MESSAGE LIST
+===================== */
+#messages {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* =====================
+   MESSAGE ROW
+===================== */
+.chat-message {
+  white-space: pre-wrap;
+}
+
+/* =====================
+   MESSAGE CONTENT
+===================== */
+.message {
+  display: inline;
+}
+
+/* =====================
+   USERNAME
+===================== */
+.username {
+  font-weight: 600;
+  color: #9cdcfe; /* VS Code cyan */
+}
+
+/* =====================
+   ICONS
+===================== */
+.icon {
+  width: 12px;
+  height: 12px;
+  vertical-align: middle;
+  margin-right: 4px;
+  opacity: 0.6;
+}
+
+/* =====================
+   PLATFORM COLOR HINTS
+===================== */
+img[src*="twitch"] {
+  filter: brightness(0) saturate(100%) invert(37%) sepia(89%) saturate(567%) hue-rotate(241deg);
+}
+
+img[src*="youtube"] {
+  filter: brightness(0) saturate(100%) invert(31%) sepia(91%) saturate(5164%) hue-rotate(346deg);
+}
+
+/* =====================
+   SPECIAL STATES
+===================== */
+.firstmessage {
+  color: #4ec9b0; /* teal */
+}
+
+.highlighted {
+  color: #d7ba7d; /* yellow */
+}
+
+/* =====================
+   ALERTS
+===================== */
+.alertMessage {
+  color: #ce9178; /* orange */
+}
+
+/* =====================
+   LOG PREFIX STYLE
+===================== */
+.chat-message::before {
+  content: "> ";
+  color: #6a9955;
+}
+
+/* =====================
+   DIM OLD MESSAGES
+===================== */
+.chat-message:nth-last-child(n+40) {
+  opacity: 0.7;
+}
+
+/* =====================
+   NO SCROLLBARS
+===================== */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  scrollbar-width: none;
+}
