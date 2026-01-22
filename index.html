@@ -35,7 +35,7 @@
             onConnect: async (data) => {
                 let message = 
                 `
-                <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Client connected succesfully! (v0.3.1)</span></b></span>
+                <b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Client connected succesfully! (v0.3.2)</span></b></span>
                 `
                 displayTemporaryMessage(message)
                 let excludedList = await updateExcluded()
@@ -63,8 +63,10 @@
 
             //check to see if we should ignore this message
             for (let user in ignoreList){ 
-                console.log("CHECKING",ignoreList[user].toLowerCase(),"VS",username.toLowerCase())
-                if (username.toLowerCase() == ignoreList[user].toLowerCase()){ 
+                let ignoreUsername = username.toString().toLowerCase()
+                let ignoreCheckname = ignoreList[user].toString().toLowerCase()
+                console.log("CHECKING",ignoreUsername,"VS",ignoreCheckname)
+                if (ignoreUsername == ignoreCheckname){ 
                     console.log("IGNOREING USER:",username)
                     return 
                 }
@@ -91,8 +93,10 @@
 
             //check to see if we should ignore this message
             for (let user in ignoreList){ 
-                console.log("CHECKING",ignoreList[user].toLowerCase(),"VS",username.toLowerCase())
-                if (username.toLowerCase() == ignoreList[user].toLowerCase()){ 
+                let ignoreUsername = username.toString().toLowerCase()
+                let ignoreCheckname = ignoreList[user].toString().toLowerCase()
+                console.log("CHECKING",ignoreUsername,"VS",ignoreCheckname)
+                if (ignoreUsername == ignoreCheckname){ 
                     console.log("IGNOREING USER:",username)
                     return 
                 }
