@@ -171,7 +171,8 @@ client.on('Twitch.RewardRedemption', ({ event, data }) => {
     let title = data.reward.title
     displayAlertMessage(
         `${username} redeemed ${title}!`,
-        ['alertReward']
+        ['alertReward'],
+        30
     );   
 });
 
