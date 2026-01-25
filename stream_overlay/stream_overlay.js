@@ -163,17 +163,16 @@ client.on('Twitch.ReSub', ({ event, data }) => {
     displayAlertMessage(
         `${username} just re-subscribed! (${subLength} months)`,
         ['alertSub']
-    );
-
+        );
 });
 
 client.on('Twitch.RewardRedemption', ({ event, data }) => {
-    let username = data.user.name
-    let subLength = data.user.monthsSubscribed
+    let username = data.user_name
+    let title = data.reward.title
     displayAlertMessage(
-        `${username} redeemed a channel reward!`,
+        `${username} redeemed ${title}}!`,
         ['alertReward']
-    );
+    );   
 });
 
 ///////////////////
@@ -530,6 +529,6 @@ async function updateExcluded(){
                 }
                 
             }
-            console.log("IGNORELIST : ",ignoreList)
+            // console.log("IGNORELIST : ",ignoreList)
             return ignoreList
         }
