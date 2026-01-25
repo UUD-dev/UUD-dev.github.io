@@ -284,7 +284,7 @@ function displayTwitchChatMessage(data) {
         classes
     });
 
-    appendMessage(messageNode);
+    appendMessage(messageNode, 60);
 }
 
 
