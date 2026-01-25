@@ -31,7 +31,7 @@ const client = new StreamerbotClient({
                     await updateExcluded()
                 }, 1000*60*5);
         displayAlertMessage(
-            'Chat Overlay Connected (v0.6.1.3)',
+            'Chat Overlay Connected (v0.6.1.4)',
             ['alertConnected'],
             1
         );
