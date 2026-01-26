@@ -1,14 +1,18 @@
 /////////
 //GLOBALS
 /////////
-const ver = "1.3.5"
+const ver = "1.3.6"
 const popupQueue = [];
 let isPopupActive = false;
 const userColors = new Map();
 const MAX_MESSAGES = 50; // adjust for your overlay size
 var ignoreList = []
 const JUMPSCARE_IMAGES = [
-  'images/jumpscare/scare1.png'
+  'images/jumpscare/scare1.png',
+  'images/jumpscare/scare2.png',
+  'images/jumpscare/scare3.png',
+  'images/jumpscare/scare4.webp',
+  'images/jumpscare/scare5.jpg'
 ];
 
 JUMPSCARE_IMAGES.forEach(src => {
