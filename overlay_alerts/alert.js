@@ -1,7 +1,7 @@
 /////////
 //GLOBALS
 /////////
-const ver = "1.3.3"
+const ver = "1.3.4"
 const popupQueue = [];
 let isPopupActive = false;
 const userColors = new Map();
@@ -46,7 +46,7 @@ const client = new StreamerbotClient({
         displayAlertMessage(
             `Alert Overlay Connected (v${ver})`,
             ['alertConnected'],
-            1
+            3
         );
     }
 
