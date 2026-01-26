@@ -1,7 +1,7 @@
 /////////
 //GLOBALS
 /////////
-const ver = "1.3.2"
+const ver = "1.3.3"
 const popupQueue = [];
 let isPopupActive = false;
 const userColors = new Map();
@@ -678,7 +678,7 @@ function jumpscareActivate(data) {
     // 🔀 RANDOM IMAGE
     image.src = getRandomJumpscareImage();
 
-    message.textContent = `[${data.user_name}]`;
+    message.textContent = `[${data.user_name}] ${data.user_input}`;
 
     // RESET
     image.style.opacity = '1';
