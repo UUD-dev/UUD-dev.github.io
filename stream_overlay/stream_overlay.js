@@ -82,8 +82,7 @@ client.on('YouTube.NewSubscriber', ({ event, data }) => {
     displayAlertMessage(
         `${username} just subscribed on YouTube!`,
         ['alertSub']
-    );
-    
+    );   
 
     
 });

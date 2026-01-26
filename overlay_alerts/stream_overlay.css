@@ -1,0 +1,139 @@
+body {
+  background-color: rgba(158, 48, 158, 0);
+  margin: 0;
+  overflow: hidden;
+  font-family: "Lucida Console", "Courier New", monospace;
+}
+
+#chat-box {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column-reverse;
+  opacity: 0.8;
+  font-size: 24px;
+  color: white;
+  overflow: hidden;
+}
+
+#messages {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.chat-message {
+  display: flex;
+  flex-direction: column;
+  background-color: #1e1e1e;
+  padding: 4px 6px;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.chat-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: bold;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.message {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.firstmessage {
+  background-color: #00ff407c;
+}
+
+.highlighted {
+  background-color: #ea00ff7c;
+}
+
+.alert {
+  background-color: #2a2a2a;
+}
+
+.alertError {
+  border-left: 4px solid #ff4d4d;
+}
+
+.alertConnected {
+  border-left: 4px solid #4caf50;
+}
+
+.alertFollow {
+  border-left: 4px solid #9146ff;
+}
+
+.alertSub {
+  border-left: 4px solid #ff66cc;
+}
+
+.alertSuperchat {
+  border-left: 4px solid #ffcc00;
+}
+
+.alertCheer {
+  border-left: 4px solid #00e5ff;
+}
+
+.alertReward {
+  border-left: 4px solid #00ff88;
+}
+
+.emote {
+  height: 1.2em;
+  vertical-align: middle;
+}
+
+#overlay-root {
+  position: fixed;
+  bottom: 30px;   /* <-- SAFE PADDING FROM SCREEN EDGE */
+  right: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+.stream-popup {
+  position: absolute;
+  bottom: -200px;
+  right: 20px;
+  width: 420px;
+  opacity: 0;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.stream-popup.show {
+  opacity: 1;
+  transform: translateY(-190px);
+}
+
+.stream-popup.hide {
+  opacity: 0;
+  transform: translateY(0);
+}
+
+.stream-popup img {
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+}
+
+.stream-popup .message {
+  margin-top: 6px;
+  padding: 6px 8px;
+  font-size: 50px;
+  text-align: center;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 6px;
+  font-family: Arial, sans-serif;
+}
