@@ -37,7 +37,7 @@ const client = new StreamerbotClient({
                     await updateExcluded()
                 }, 1000*60*5);
         displayAlertMessage(
-            'Alert Overlay Connected (v0.3.1.3)',
+            'Alert Overlay Connected (v0.3.2.5)',
             ['alertConnected'],
             1
         );
@@ -618,42 +618,37 @@ function setDeathCount(data){
 //ALERT FUNCTIONS
 /////////////////
 
-var flashbangDiv = document.getElementById('flashbang');
-	flashbangDiv.style.backgroundColor = "#00000000";
-
 function flashBangActivate(data) {
+	const flashbangDiv = document.getElementById('flashbang');
+	const flashbangMessage = document.getElementById('flashbangMessage');
 
-    var flashbangDiv = document.getElementById('flashbang');
-	
-	var flashbangMessage = document.getElementById('flashbangMessage');
+	flashbangMessage.textContent = `[${data.user_name}]`;
+	playAlertSound('audio/flashbang.mp3');
 
-    flashbangDiv.style.transition = 'none';
-    flashbangDiv.style.backgroundColor = 'white';
-	flashbangMessage.innerHTML = `[${data.user_name}]`
-	playAlertSound('audio/flashbang.mp3')
-    setTimeout(() => {
-		flashbangDiv.style.transition = 'background-color 5s ease-out';
-        flashbangDiv.style.backgroundColor = "#00000000";
-		flashbangMessage.style.transition = 'color 5s ease-out';
-		flashbangMessage.style.color = "#00000000";
-    }, 2000);
-}
+	// Reset animation
+	flashbangDiv.classList.remove('active');
+	flashbangDiv.offsetHeight; // force reflow
+
+	flashbangDiv.classList.add('active');
+
+	// Fully remove after animation
+	setTimeout(() => {
+		flashbangDiv.classList.remove('active');
+		flashbangDiv.style.display = 'none';
+	}, 5000);
+	}
 
 function blackoutActivate(data) {
-    var blackoutDiv = document.getElementById('blackout');
-	var blackoutMessage = document.getElementById('blackoutMessage')
+  const blackout = document.getElementById('blackout');
 
-    blackoutDiv.style.transition = 'none';
-    blackoutDiv.style.backgroundColor = 'white';
-	blackoutMessage.innerHTML = `[${data.user_name}]`
-    blackoutDiv.style.backgroundColor = 'black';
+  blackout.classList.remove('active');
+  blackout.offsetHeight; // reset animation
+  blackout.classList.add('active');
 
-    setTimeout(() => {
-		blackoutDiv.style.transition = 'background-color 3s ease-out';
-        blackoutDiv.style.backgroundColor = "#00000000";
-		blackoutMessage.style.transition = 'color 3s ease-out';
-		blackoutMessage.style.color = "#00000000";
-    }, 5000);
+  setTimeout(() => {
+    blackout.classList.remove('active');
+    blackout.style.display = 'none';
+  }, 4000);
 }
 
 function jumpscareActivate(data) {

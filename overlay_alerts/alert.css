@@ -17,35 +17,61 @@ body {
   /* float:right; */
 }
 
-#flashbang{
-  display:flex;
-  position: absolute;
-  background-color:rgba(0, 0, 0, 0);
-  width:100%;
-  height:100%;
+#flashbang {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: white;
+  pointer-events: none;
+  z-index: 10000;
 }
 
-#blackout{
-  display:flex;
-  background-color:rgba(0, 0, 0, 0);
-  width:1000px;
-  height:1000px;
+#flashbang.active {
+  display: block;
+  animation: flashbangFade 5s ease-out forwards;
+}
+
+@keyframes flashbangFade {
+  0% {
+    opacity: 1;
+  }
+  10% {
+    opacity: 1; /* full white hit */
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+#blackout {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+
+  width: 600px;
+  height: 600px;
+
+  background: black;
   border-radius: 50%;
 
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0.2);
+  opacity: 0;
+
+  pointer-events: none;
+  z-index: 9000;
 }
 
-.center{
-  display:flex;
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+#blackout.active {
+  display: block;
+  animation: blackoutCircle 4s ease-out forwards;
+}
+
+@keyframes blackoutCircle {
+  0%   { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+  30%  { transform: translate(-50%, -50%) scale(1);   opacity: 1; }
+  70%  { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0; }
 }
 
 #blackoutMessage{
