@@ -177,10 +177,13 @@ client.on('Twitch.ReSub', ({ event, data }) => {
 client.on('Twitch.RewardRedemption', ({ event, data }) => {
     let username = data.user_name
     let title = data.reward.title
+    let message = ""
+	if (data.user_input){message = data.user_input}
+    let messageString = `[${username}] ${message}`
     displayAlertMessage(
-        `${username} redeemed ${title}!`,
+        `${username} redeemed ${title}!\'n${messageString}'`,
         ['alertReward'],
-        10
+        20
     );   
 });
 
