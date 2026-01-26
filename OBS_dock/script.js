@@ -1,4 +1,4 @@
-const ver = "1.1.2"
+const ver = "1.1.3"
 const websocketport = 8080;
 const websockethost = '127.0.0.1';
 let ignoreList = [];
@@ -63,8 +63,6 @@ function handleRewardRedemption(data){
     const title = data.reward.title
 	let message = ""
 	if (data.user_input){message = `: ${data.user_input}`}
-	console.log('user_input',data.user_input)
-	
 	let messageString = `[${username} Redeemed ${title}]${message}`
     displayAlertMessage(messageString)
 }
@@ -169,7 +167,6 @@ async function updateExcluded() {
         if (platform?.broadcastUserName) ignoreList.push(platform.broadcastUserName);
     });
 
-    // console.log("IGNORELIST:", ignoreList);
     return ignoreList;
 }
 
