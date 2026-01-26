@@ -1,7 +1,7 @@
 /////////
 //GLOBALS
 /////////
-const ver = "1.2.1"
+const ver = "1.2.2"
 const popupQueue = [];
 let isPopupActive = false;
 const userColors = new Map();
@@ -656,44 +656,44 @@ function blackoutActivate(data) {
 }
 
 function jumpscareActivate(data) {
-  const jumpscare = document.getElementById('jumpscare');
-  const image = document.getElementById('jumpscareImage');
-  const message = document.getElementById('jumpscareMessage');
+    const jumpscare = document.getElementById('jumpscare');
+    const image = document.getElementById('jumpscareImage');
+    const message = document.getElementById('jumpscareMessage');
 
-  playAlertSound("audio/jumpscare.mp3");
+    playAlertSound("audio/jumpscare.mp3");
 
-  message.textContent = `[${data.user_name}]`;
+    message.textContent = `[${data.user_name}]`;
 
-  // RESET
-  jumpscare.style.display = 'flex';
-  jumpscare.style.opacity = '1';
+    // ACTIVATE
+    jumpscare.classList.add('active');
 
-  image.style.opacity = '1';
-  message.style.opacity = '0';
-
-  // Force reflow
-  jumpscare.offsetHeight;
-
-  // MESSAGE FADE IN (slight delay feels nicer)
-  setTimeout(() => {
-    message.style.opacity = '1';
-  }, 200);
-
-  // IMAGE OUT FIRST
-  setTimeout(() => {
-    image.style.opacity = '0';
-  }, 1000);
-
-  // MESSAGE LINGERS
-  setTimeout(() => {
+    image.style.opacity = '1';
     message.style.opacity = '0';
-  }, 2600);
 
-  // FULL CLEANUP
-  setTimeout(() => {
-    jumpscare.style.display = 'none';
-  }, 3400);
+    // Force reflow
+    jumpscare.offsetHeight;
+
+    // MESSAGE FADE IN
+    setTimeout(() => {
+        message.style.opacity = '1';
+    }, 200);
+
+    // IMAGE OUT FIRST
+    setTimeout(() => {
+        image.style.opacity = '0';
+    }, 1000);
+
+    // MESSAGE LINGERS
+    setTimeout(() => {
+        message.style.opacity = '0';
+    }, 2600);
+
+    // CLEANUP
+    setTimeout(() => {
+        jumpscare.classList.remove('active');
+    }, 3400);
 }
+
 
 
 function showStreamPopup(imageUrl, messageText, onComplete, soundUrl) {

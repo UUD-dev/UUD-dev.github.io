@@ -130,14 +130,24 @@ body {
 }
 
 #jumpscare {
-  display: none; /* 🔑 START HIDDEN */
   position: fixed;
   inset: 0;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   pointer-events: none;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+
+#jumpscare.active {
+  opacity: 1;
+  visibility: visible;
 }
 
 #jumpscareImage {
