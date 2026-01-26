@@ -112,8 +112,12 @@ body {
 }
 
 #jumpscareImage {
-  max-width: 400px;
-  height: auto;
+  width: 800px;
+  height: 800px;
+
+  object-fit: cover;   /* fills box, crops overflow */
+  object-position: center;
+
   animation: shake 0.2s infinite;
 }
 
