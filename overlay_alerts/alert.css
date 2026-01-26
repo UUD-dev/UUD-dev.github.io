@@ -5,6 +5,77 @@ body {
   font-family: "Lucida Console", "Courier New", monospace;
 }
 
+#death-score{
+  padding: 10px;
+  font-size: 48px;
+  background-color: rgba(0, 0, 0, 0.452);
+  color: rgba(255, 0, 0, 0.884);
+  /* display: inline-block; */
+  position: absolute; 
+  top: 0; 
+  right: 0; 
+  /* float:right; */
+}
+
+#flashbang{
+  display:flex;
+  position: absolute;
+  background-color:rgba(0, 0, 0, 0);
+  width:100%;
+  height:100%;
+}
+
+#blackout{
+  display:flex;
+  background-color:rgba(0, 0, 0, 0);
+  width:1000px;
+  height:1000px;
+  border-radius: 50%;
+
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.center{
+  display:flex;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#blackoutMessage{
+  color: rgb(99, 99, 99);
+  font-size: 50px;
+  text-align: center;
+}
+
+#flashbangMessage{
+  color: rgb(158, 158, 158);
+  font-size: 50px;
+  text-align: center;
+}
+
+#jumpscareMessage{
+  color: rgb(255, 0, 0);
+  font-size: 20px;
+  text-align: center;
+  background-color: #ffffff00;
+  width:100%;
+  height:100%;
+}
+
+#jumpscare{
+  background-color: #ffffff00;
+  width:400px;
+  height:400px;
+  opacity: 0%;
+}
+
 #chat-box {
   position: absolute;
   inset: 0;
