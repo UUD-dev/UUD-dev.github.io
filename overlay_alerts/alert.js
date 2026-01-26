@@ -37,7 +37,7 @@ const client = new StreamerbotClient({
                     await updateExcluded()
                 }, 1000*60*5);
         displayAlertMessage(
-            'Alert Overlay Connected (v0.3.1.2)',
+            'Alert Overlay Connected (v0.3.1.3)',
             ['alertConnected'],
             1
         );
@@ -657,22 +657,21 @@ function blackoutActivate(data) {
 }
 
 function jumpscareActivate(data) {
-    var jumpscareDiv = document.getElementById('jumpscare');
-	var jumpscareMessage = document.getElementById('jumpscareMessage');
+	const jumpscareDiv = document.getElementById('jumpscare');
+	const jumpscareMessage = document.getElementById('jumpscareMessage');
 
-	playAlertSound("audio/jumpscare.mp3")
+	playAlertSound("audio/jumpscare.mp3");
 
-    jumpscareDiv.style.transition = 'none';
-    jumpscareDiv.style.opacity = '100%';
-	jumpscareMessage.innerHTML = `[${data.user_name}]`
-    jumpscareDiv.style.backgroundColor = 'black';
+	jumpscareMessage.textContent = `[${data.user_name}]`;
 
-    setTimeout(() => {
-		jumpscareDiv.style.transition = 'opacity 1s ease-out';
-        jumpscareDiv.style.opacity = "0%";
-		jumpscareMessage.style.transition = 'color 1s ease-out';
-		jumpscareMessage.style.color = "#00000000";
-    }, 1000);
+	// SHOW
+	jumpscareDiv.style.display = 'block';
+	jumpscareDiv.style.transform = 'translate(-50%, -50%) scale(1)';
+
+	// HIDE AFTER 1s
+	setTimeout(() => {
+		jumpscareDiv.style.display = 'none';
+	}, 1000);
 }
 
 

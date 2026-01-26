@@ -61,13 +61,14 @@ body {
 }
 
 #jumpscare {
+  display: none;                 /* 🔑 START HIDDEN */
   background-color: transparent;
   width: 400px;
   height: 400px;
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(1);
   pointer-events: none;
   z-index: 9999;
 }
