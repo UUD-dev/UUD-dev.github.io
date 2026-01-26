@@ -166,7 +166,7 @@ client.on('Command.Triggered', (data) => {
 			setDeathCount(data)
 			break;
 		case "TestCommand":
-			playSound('audio/flashbang.mp3')
+			playAlertSound('audio/flashbang.mp3')
 		case "Refresh":
 			location.reload()
 			break;
@@ -630,7 +630,7 @@ function flashBangActivate(data) {
     flashbangDiv.style.transition = 'none';
     flashbangDiv.style.backgroundColor = 'white';
 	flashbangMessage.innerHTML = `[${data.user_name}]`
-	playSound('audio/flashbang.mp3')
+	playAlertSound('audio/flashbang.mp3')
     setTimeout(() => {
 		flashbangDiv.style.transition = 'background-color 5s ease-out';
         flashbangDiv.style.backgroundColor = "#00000000";
@@ -660,7 +660,7 @@ function jumpscareActivate(data) {
     var jumpscareDiv = document.getElementById('jumpscare');
 	var jumpscareMessage = document.getElementById('jumpscareMessage');
 
-	playSound("audio/jumpscare.mp3")
+	playAlertSound("audio/jumpscare.mp3")
 
     jumpscareDiv.style.transition = 'none';
     jumpscareDiv.style.opacity = '100%';
