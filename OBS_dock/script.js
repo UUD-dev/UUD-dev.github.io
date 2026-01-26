@@ -1,4 +1,4 @@
-const ver = "1.1.3"
+const ver = "1.1.4"
 const websocketport = 8080;
 const websockethost = '127.0.0.1';
 let ignoreList = [];
@@ -59,10 +59,10 @@ function handleYoutubeMessage(data) {
 }
 
 function handleRewardRedemption(data){
-    const username = data.user_name
-    const title = data.reward.title
+    const username = data.data.user_name
+    const title = data.data.reward.title
 	let message = ""
-	if (data.user_input){message = `: ${data.user_input}`}
+	if (data.data.user_input){message = `: ${data.data.user_input}`}
 	let messageString = `[${username} Redeemed ${title}]${message}`
     displayAlertMessage(messageString)
 }
