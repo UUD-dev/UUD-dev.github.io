@@ -1,7 +1,62 @@
-const ver = "1.1.4"
+const ver = "1.2.5"
 const websocketport = 8080;
 const websockethost = '127.0.0.1';
 let ignoreList = [];
+
+window.onerror = function (message, source, lineno, colno, error) {
+    displayTemporaryMessage(
+        `<b>
+            <img class="icon" src="images/alert.png">
+            <span class="alertMessage">
+                [JS ERROR]<br>
+                ${escapeHtml(message)}<br>
+                <small>${source?.split('/').pop()}:${lineno}</small>
+            </span>
+        </b>`
+    );
+
+    return false;
+};
+
+window.addEventListener('unhandledrejection', event => {
+    displayTemporaryMessage(
+        `<b>
+            <img class="icon" src="images/alert.png">
+            <span class="alertMessage">
+                [ASYNC ERROR]<br>
+                ${escapeHtml(event.reason?.message || event.reason)}
+            </span>
+        </b>`
+    );
+});
+
+const originalConsoleError = console.error;
+
+console.error = (...args) => {
+    displayTemporaryMessage(
+        `<b>
+            <img class="icon" src="images/alert.png">
+            <span class="alertMessage">
+                [CONSOLE ERROR]<br>
+                ${escapeHtml(args.join(' '))}
+            </span>
+        </b>`
+    );
+
+    originalConsoleError(...args);
+};
+
+function escapeHtml(str) {
+    if (typeof str !== 'string') return str;
+    return str.replace(/[&<>"']/g, m => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    })[m]);
+}
+
 
 /////////////////////////
 // CONNECTING TO STREAMER.BOT CLIENT
@@ -12,10 +67,7 @@ const client = new StreamerbotClient({
     port: websocketport,
     endpoint: '/',
     onError: (err) => {
-        console.log("ERROR", err);
-        displayTemporaryMessage(
-            `<b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[ERROR!] ${JSON.stringify(err)}</span></b>`
-        );
+        console.error('Streamer.bot Error:', err);
     },
     onConnect: async () => {
         displayTemporaryMessage(
@@ -112,16 +164,25 @@ function displayAlertMessage(message) {
 }
 
 function displayTemporaryMessage(message) {
+    const chatBox = document.getElementById('messages');
+    if (!chatBox) {
+        console.warn('Overlay message skipped (messages container missing):', message);
+        return;
+    }
+
     const newMessageDiv = document.createElement('div');
     const messageId = generateMessageId();
+
     newMessageDiv.id = messageId;
     newMessageDiv.className = 'chat-message';
     newMessageDiv.innerHTML = `<span class="message">${message}</span>`;
-    const chatBox = document.getElementById('messages');
+
     chatBox.appendChild(newMessageDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
+
     deleteMessage(messageId, 10);
 }
+
 
 /////////////////////////
 // MESSAGES / ACTIONS
