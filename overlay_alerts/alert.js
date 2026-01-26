@@ -31,7 +31,7 @@ const client = new StreamerbotClient({
                     await updateExcluded()
                 }, 1000*60*5);
         displayAlertMessage(
-            'Alert Overlay Connected (v0.2.3.5)',
+            'Alert Overlay Connected (v0.2.4.1)',
             ['alertConnected'],
             1
         );
@@ -143,6 +143,15 @@ client.on('Twitch.ReSub', ({ event, data }) => {
 //         ['alertReward'],
 //     );   
 // });
+
+client.on('Raw.ActionCompleted', (data) => {
+	if (data.data.name == "deathAdd"){
+		activateDeathAdd(data.data)
+	}
+	if (data.data.name == "deathSubtract"){
+		activateDeathSubtract(data.data)
+	}
+});
 
 client.on('Command.Triggered', (data) => {
 	console.log("COMMAND TRIGGERED:",data.data)
