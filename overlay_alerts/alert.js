@@ -656,21 +656,43 @@ function blackoutActivate(data) {
 }
 
 function jumpscareActivate(data) {
-	const jumpscareDiv = document.getElementById('jumpscare');
-	const jumpscareMessage = document.getElementById('jumpscareMessage');
+  const jumpscare = document.getElementById('jumpscare');
+  const image = document.getElementById('jumpscareImage');
+  const message = document.getElementById('jumpscareMessage');
 
-	playAlertSound("audio/jumpscare.mp3");
+  playAlertSound("audio/jumpscare.mp3");
 
-	jumpscareMessage.textContent = `[${data.user_name}]`;
+  message.textContent = `[${data.user_name}]`;
 
-	// SHOW
-	jumpscareDiv.style.display = 'block';
-	jumpscareDiv.style.transform = 'translate(-50%, -50%) scale(1)';
+  // RESET
+  jumpscare.style.display = 'flex';
+  jumpscare.style.opacity = '1';
 
-	// HIDE AFTER 1s
-	setTimeout(() => {
-		jumpscareDiv.style.display = 'none';
-	}, 1000);
+  image.style.opacity = '1';
+  message.style.opacity = '0';
+
+  // Force reflow
+  jumpscare.offsetHeight;
+
+  // MESSAGE FADE IN (slight delay feels nicer)
+  setTimeout(() => {
+    message.style.opacity = '1';
+  }, 200);
+
+  // IMAGE OUT FIRST
+  setTimeout(() => {
+    image.style.opacity = '0';
+  }, 1000);
+
+  // MESSAGE LINGERS
+  setTimeout(() => {
+    message.style.opacity = '0';
+  }, 2600);
+
+  // FULL CLEANUP
+  setTimeout(() => {
+    jumpscare.style.display = 'none';
+  }, 3400);
 }
 
 

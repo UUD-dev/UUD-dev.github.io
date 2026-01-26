@@ -101,24 +101,45 @@ body {
 }
 
 #jumpscare {
-  display: none;                 /* 🔑 START HIDDEN */
-  background-color: transparent;
-  width: 400px;
-  height: 400px;
+  display: none; /* 🔑 START HIDDEN */
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(1);
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   pointer-events: none;
-  z-index: 9999;
+}
+
+#jumpscareImage {
+  max-width: 400px;
+  height: auto;
+  animation: shake 0.2s infinite;
 }
 
 #jumpscareMessage {
-  color: rgb(255, 0, 0);
+  margin-top: 12px;
+  color: red;
   font-size: 20px;
   text-align: center;
-  background-color: transparent;
-  width: 100%;
+  opacity: 0; /* REQUIRED */
+  transform: scale(0.95);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+#jumpscareMessage[style*="opacity: 1"] {
+  transform: scale(1);
+}
+
+#jumpscare:not([style*="display: flex"]) #jumpscareImage {
+  animation: none;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  50% { transform: translateX(2px); }
+  75% { transform: translateX(-2px); }
 }
 
 #chat-box {
