@@ -1,4 +1,4 @@
-const ver = "1.0.0"
+const ver = "1.0.1"
 const websocketport = 8080;
 const websockethost = '127.0.0.1';
 let ignoreList = [];
@@ -56,6 +56,17 @@ function handleYoutubeMessage(data) {
     const messageString = `[${username}]: ${data.data.message}`;
     sendTwitchMessage(messageString);
     displayChatMessage(data.data, 'youtube');
+}
+
+function handleRewardRedemption(data){
+    const username = data.user_name
+    const title = data.reward.title
+	let message = ""
+	if (data.user_input){message = `: ${data.user_input}`}
+	console.log('user_input',data.user_input)
+	
+	let messageString = `[${username} Redeemed ${title}]${message}`
+    displayAlertMessage(messageString)
 }
 
 function displayChatMessage(data, platform) {
@@ -173,3 +184,5 @@ client.on('YouTube.NewSubscriber', ({ data }) => {
 });
 
 // Add other alert events similarly as needed...
+
+client.on('Twitch.RewardRedemption', handleRewardRedemption);
