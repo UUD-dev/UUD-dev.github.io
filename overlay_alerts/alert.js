@@ -31,7 +31,7 @@ const client = new StreamerbotClient({
                     await updateExcluded()
                 }, 1000*60*5);
         displayAlertMessage(
-            'Alert Overlay Connected (v0.2.1)',
+            'Alert Overlay Connected (v0.2.2)',
             ['alertConnected'],
             1
         );
@@ -220,6 +220,364 @@ client.on('Twitch.RewardRedemption', ({ event, data }) => {
 			break;
 	}
 });
+
+///////////////////
+//MESSAGE FUNCTIONS
+///////////////////
+
+function createChatMessage({
+  icon = null,
+  username = null,
+  color = null,
+  message = '',
+  classes = []
+    }) {
+    const container = document.createElement('div');
+    container.classList.add('chat-message', ...classes);
+
+    // Header (icon + username)
+    if (icon || username) {
+        const header = document.createElement('b');
+        header.className = 'chat-header';
+
+        if (icon) {
+        const img = document.createElement('img');
+        img.className = 'icon';
+        img.src = icon;
+        img.alt = '';
+        header.appendChild(img);
+        }
+
+        if (username) {
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = username;
+        if (color) nameSpan.style.color = color;
+        header.appendChild(nameSpan);
+        // header.append(':');
+        }
+
+        container.appendChild(header);
+    }
+
+    // Message text
+    if (message) {
+        const messageSpan = document.createElement('span');
+        messageSpan.className = 'message';
+
+        if (Array.isArray(message)) {
+            message.forEach(node => messageSpan.appendChild(node));
+        } else {
+            messageSpan.textContent = message;
+        }
+
+        container.appendChild(messageSpan);
+    }
+
+
+    return container;
+}
+
+function appendMessage(node, timeout = 0) {
+  const messageId = generateMessageId();
+  node.id = messageId;
+
+  const chatBox = document.getElementById('messages');
+  chatBox.appendChild(node);
+
+  pruneMessages();
+
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  if (timeout > 0) {
+    deleteMessage(messageId, timeout);
+  }
+}
+
+
+function displayTwitchChatMessage(data) {
+    const username = data.message.displayName;
+    const chatColor = getOrAssignColor(username);
+
+    const rawMessage = sanitizeChatText(
+        data.message.message,
+        { maxLength: 300 }
+    );
+
+    const parsedMessage = parseTwitchMessage(
+        rawMessage,
+        data.message.emotes
+    );
+
+    const classes = [];
+    if (data.message.firstMessage) classes.push('firstmessage');
+    if (data.message.isHighlighted) classes.push('highlighted');
+
+    const messageNode = createChatMessage({
+        icon: 'images/twitch.png',
+        username,
+        color: chatColor,
+        message: parsedMessage,
+        classes
+    });
+
+    appendMessage(messageNode);
+}
+
+
+function displayYoutubeChatMessage(data) {
+    const username = data.user.name;
+    const chatColor = getOrAssignColor(username);
+
+    const safeMessage = sanitizeChatText(data.message, {
+        maxLength: 300
+    });
+
+    const messageNode = createChatMessage({
+        icon: 'images/youtube.png',
+        username,
+        color: chatColor,
+        message: safeMessage
+    });
+
+    appendMessage(messageNode);
+}
+
+
+function displayAlertMessage(text, extraClasses = [], timeout = 20) {
+  const alertNode = createChatMessage({
+    icon: 'images/alert.png',
+    message: text,
+    classes: ['alert', ...extraClasses]
+  });
+
+  appendMessage(alertNode, timeout);
+}
+
+//deletes messages via ID after x time
+function deleteMessage(msgId, timeout){
+    // Set the timer to remove the message
+    if (timeout > 0){
+        setTimeout(() => {
+                const msgElement = document.getElementById(msgId);
+                if (msgElement) {
+                        // console.log("REMOVING MESSAGE",msgId)
+                        msgElement.remove(); // Or msgElement.style.display = 'none'; to hide it
+                        // console.log(`Message ${messageId} removed.`);
+                }
+        }, 1000 * timeout); // in seconds
+    }
+    
+}
+
+//generate a random string to use as a message id (for automatic deletion)
+function generateMessageId() {
+    // Generate a random number between 0 and 16777215 (0xFFFFFF)
+    const randomInt = Math.floor(Math.random() * 16777215);
+
+    // Convert the number to a hexadecimal string
+    let hexColor = randomInt.toString(16);
+
+    // Pad the string with leading zeros if necessary to ensure 6 characters
+    // '0'.repeat(6) creates a string of six zeros
+    // Slice(-6) gets the last six characters (padding at the beginning)
+    hexColor = `#${hexColor.padStart(6, '0')}`;
+    
+    return hexColor;
+}
+
+function generateUniqueColor(userId) {
+    // Convert to string to handle numbers or strings
+    const str = userId.toString();
+
+    // Create a simple numeric seed from character codes
+    let seed = 0;
+    for (let i = 0; i < str.length; i++) {
+        seed += str.charCodeAt(i);
+    }
+
+    // Use the seed to generate a hue between 0-360
+    const hue = seed % 360;
+
+    // Set saturation and lightness to make the color vibrant but readable
+    const saturation = 70; // 70% saturated
+    const lightness = 55;  // 55% lightness
+
+    // Return an HSL color string
+    const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+
+    // console.log('GENERATED COLOR:', color, 'for user:', userId);
+    return color;
+}
+
+
+function getOrAssignColor(userId) {
+  if (userColors.has(userId)) {
+    // console.log("USER HAS COLOR:",userId,userColors.get(userId))
+    return userColors.get(userId);
+  } else {
+    const color = generateUniqueColor(userId);
+    // console.log("GENERATED COLOR: ",color,userId)
+    userColors.set(userId, color);
+    return color;
+  }
+}
+
+function pruneMessages() {
+  const chatBox = document.getElementById('messages');
+  const messages = chatBox.children;
+
+  while (messages.length > MAX_MESSAGES) {
+    chatBox.removeChild(messages[0]); // remove oldest
+  }
+}
+
+function parseTwitchMessage(message, emotes) {
+    if (!emotes || emotes.length === 0) {
+        return [document.createTextNode(message)];
+    }
+
+    const fragments = [];
+
+    // Normalize emotes into { id, name } objects
+    const normalizedEmotes = [];
+
+    if (Array.isArray(emotes)) {
+        emotes.forEach(e => {
+            if (typeof e === 'string') {
+                normalizedEmotes.push({ id: e });
+            } else if (typeof e === 'object' && e.id) {
+                normalizedEmotes.push({ id: e.id, name: e.name });
+            }
+        });
+    } else {
+        // IRC-style object { id: ["0-4"] }
+        return parseIrcStyleEmotes(message, emotes);
+    }
+
+    // Word-based parsing
+    const tokens = message.split(/(\s+)/);
+
+    tokens.forEach(token => {
+        const emote = normalizedEmotes.find(e => e.name === token);
+
+        if (emote) {
+            const img = document.createElement('img');
+            img.src = `https://static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/1.0`;
+            img.className = 'emote';
+            img.alt = token;
+            img.loading = 'lazy';
+            fragments.push(img);
+        } else {
+            fragments.push(document.createTextNode(token));
+        }
+    });
+
+    return fragments;
+}
+
+function parseIrcStyleEmotes(message, emotes) {
+    const fragments = [];
+    const emotePositions = [];
+
+    for (const emoteId in emotes) {
+        const ranges = emotes[emoteId];
+        if (!Array.isArray(ranges)) continue;
+
+        ranges.forEach(range => {
+            const [start, end] = range.split('-').map(Number);
+            emotePositions.push({ id: emoteId, start, end });
+        });
+    }
+
+    if (emotePositions.length === 0) {
+        return [document.createTextNode(message)];
+    }
+
+    emotePositions.sort((a, b) => a.start - b.start);
+
+    let cursor = 0;
+
+    for (const emote of emotePositions) {
+        if (cursor < emote.start) {
+            fragments.push(
+                document.createTextNode(message.slice(cursor, emote.start))
+            );
+        }
+
+        const img = document.createElement('img');
+        img.src = `https://static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/1.0`;
+        img.className = 'emote';
+        img.alt = '';
+        img.loading = 'lazy';
+        fragments.push(img);
+
+        cursor = emote.end + 1;
+    }
+
+    if (cursor < message.length) {
+        fragments.push(
+            document.createTextNode(message.slice(cursor))
+        );
+    }
+
+    return fragments;
+}
+
+
+function sanitizeChatText(text, options = {}) {
+    const {
+        maxLength = 300,
+        removeZeroWidth = true,
+        normalizeWhitespace = true
+    } = options;
+
+    if (typeof text !== 'string') return '';
+
+    let clean = text;
+
+    // Remove zero-width & invisible characters
+    if (removeZeroWidth) {
+        clean = clean.replace(/[\u200B-\u200D\uFEFF\u2060]/g, '');
+    }
+
+    // Remove bidi override characters (text direction exploits)
+    clean = clean.replace(/[\u202A-\u202E\u2066-\u2069]/g, '');
+
+    // Normalize whitespace
+    if (normalizeWhitespace) {
+        clean = clean.replace(/\s+/g, ' ').trim();
+    }
+
+    // Hard length limit (prevents lag spam)
+    if (clean.length > maxLength) {
+        clean = clean.slice(0, maxLength) + '…';
+    }
+
+    return clean;
+}
+  
+async function updateExcluded(){
+    //reset the array
+    ignoreList = ['Streamelements', 'NightBot']
+    // retreive the broadcaster information from Streamer.bot
+    const response = await client.getBroadcaster(); 
+    // console.log("response",response)
+    // console.log(response.platforms)
+    //This loops through all active streaming platforms (Twitch, YouTube)
+    for (let i in response.platforms){
+
+        if (response.platforms[i].botUserName){
+            ignoreList.push(response.platforms[i].botUserName)
+        }
+
+        if (response.platforms[i].broadcastUserName){
+            ignoreList.push(response.platforms[i].broadcastUserName)
+        }
+        
+    }
+    // console.log("IGNORELIST : ",ignoreList)
+    return ignoreList
+}
 
 /////////////////////////
 //DEATH COUNTER FUNCTIONS
