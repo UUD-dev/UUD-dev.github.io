@@ -31,13 +31,13 @@ const client = new StreamerbotClient({
         );
     },
     onConnect: async (data) => {
-        console.log('connected')
+        console.log('connected v 0.2.4.4')
         await updateExcluded()
         setInterval(async() => {
                     await updateExcluded()
                 }, 1000*60*5);
         displayAlertMessage(
-            'Alert Overlay Connected (v0.2.4.3)',
+            'Alert Overlay Connected (v0.2.4.4)',
             ['alertConnected'],
             1
         );
