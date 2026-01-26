@@ -32,7 +32,7 @@ You should have a window appear after this step that displays both your Twitch a
 
 ### URL:
 		
-		https://uud-dev.github.io
+		https://uud-dev.github.io/OBS_dock/
 
 
 ## Everything should be setup and ready!
