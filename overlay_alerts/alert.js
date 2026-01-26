@@ -1,3 +1,9 @@
+/////////
+//GLOBALS
+/////////
+
+const popupQueue = [];
+let isPopupActive = false;
 const userColors = new Map();
 const MAX_MESSAGES = 50; // adjust for your overlay size
 var ignoreList = []
@@ -31,7 +37,7 @@ const client = new StreamerbotClient({
                     await updateExcluded()
                 }, 1000*60*5);
         displayAlertMessage(
-            'Alert Overlay Connected (v0.2.4.1)',
+            'Alert Overlay Connected (v0.2.4.2)',
             ['alertConnected'],
             1
         );
@@ -728,6 +734,7 @@ function queueStreamPopup(imageUrl, messageText, soundUrl) {
 	popupQueue.push({ imageUrl, messageText, soundUrl });
 	processPopupQueue();
 }
+
 
 function processPopupQueue() {
 	if (isPopupActive) return;
