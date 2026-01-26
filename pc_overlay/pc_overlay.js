@@ -251,7 +251,7 @@ function appendMessage(node, timeout = 0) {
 
     const chatBox = document.getElementById('messages');
     chatBox.appendChild(node);
-
+    playAlertSound('audio/newMessage.mp3')
     pruneMessages();
 
     chatBox.scrollTop = chatBox.scrollHeight;
@@ -573,4 +573,13 @@ function showStreamImage(imageUrl) {
     setTimeout(() => {
         img.remove();
     }, 5000);
+}
+
+
+function playAlertSound(url, volume = 1.0) {
+	const audio = new Audio(url);
+	audio.volume = volume;
+	audio.play().catch(err => {
+		console.warn('Alert sound blocked:', err);
+	});
 }
