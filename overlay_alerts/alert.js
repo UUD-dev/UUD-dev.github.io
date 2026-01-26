@@ -1,7 +1,7 @@
 /////////
 //GLOBALS
 /////////
-const ver = "1.1.3"
+const ver = "1.2.1"
 const popupQueue = [];
 let isPopupActive = false;
 const userColors = new Map();

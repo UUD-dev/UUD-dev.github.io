@@ -18,18 +18,52 @@ body {
 }
 
 #flashbang {
-  display: none;
   position: fixed;
   inset: 0;
   background: white;
   pointer-events: none;
   z-index: 10000;
+
+  /* CENTER CONTENT */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* HIDDEN STATE */
+  opacity: 0;
+}
+
+#flashbang.active {
+  opacity: 1;
+  animation: flashbangFade 5s ease-out forwards;
+}
+
+#flashbangMessage {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 48px;
+  font-weight: bold;
+  text-align: center;
+  animation: flashTextPop 0.4s ease-out;
+  /* subtle punch */
+  text-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+@keyframes flashTextPop {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 #flashbang.active {
   display: block;
   animation: flashbangFade 5s ease-out forwards;
 }
+
 
 @keyframes flashbangFade {
   0% {
@@ -92,12 +126,7 @@ body {
   color: rgb(99, 99, 99);
   font-size: 50px;
   text-align: center;
-}
-
-#flashbangMessage{
-  color: rgb(158, 158, 158);
-  font-size: 30px;
-  text-align: center;
+  
 }
 
 #jumpscare {
