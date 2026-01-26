@@ -1,3 +1,4 @@
+const ver = "1.0.0"
 const websocketport = 8080;
 const websockethost = '127.0.0.1';
 let ignoreList = [];
@@ -18,7 +19,7 @@ const client = new StreamerbotClient({
     },
     onConnect: async () => {
         displayTemporaryMessage(
-            `<b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Client connected successfully! (v0.4.3.1)</span></b>`
+            `<b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Client connected successfully! (v${ver}})</span></b>`
         );
         const excludedList = await updateExcluded();
         displayTemporaryMessage(

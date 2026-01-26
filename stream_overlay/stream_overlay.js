@@ -1,3 +1,4 @@
+const ver = "1.0.0"
 const userColors = new Map();
 const MAX_MESSAGES = 50; // adjust for your overlay size
 var ignoreList = []
@@ -31,7 +32,7 @@ const client = new StreamerbotClient({
                     await updateExcluded()
                 }, 1000*60*5);
         displayAlertMessage(
-            'Chat Overlay Connected (v0.6.0.3)',
+            `Chat Overlay Connected (v${ver})`,
             ['alertConnected'],
             1
         );
