@@ -56,7 +56,7 @@ client.on('Twitch.ChatMessage', async (data) => {
     }else{
         displayTwitchChatMessage(data.data)
     }
-    				
+    showStreamImage('images/Approve.png')		    		
 });
 
 //This function runs when we detect a youtube chat message has been sent.
@@ -107,7 +107,6 @@ client.on('Twitch.Follow', ({ event, data }) => {
         ['alertFollow'],
         60
     );
-
 });
 
 client.on('Twitch.Cheer', ({ event, data }) => {
@@ -242,19 +241,21 @@ function createChatMessage({
 }
 
 function appendMessage(node, timeout = 0) {
-  const messageId = generateMessageId();
-  node.id = messageId;
 
-  const chatBox = document.getElementById('messages');
-  chatBox.appendChild(node);
 
-  pruneMessages();
+    const messageId = generateMessageId();
+    node.id = messageId;
 
-  chatBox.scrollTop = chatBox.scrollHeight;
+    const chatBox = document.getElementById('messages');
+    chatBox.appendChild(node);
 
-  if (timeout > 0) {
-    deleteMessage(messageId, timeout);
-  }
+    pruneMessages();
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    if (timeout > 0) {
+        deleteMessage(messageId, timeout);
+    }
 }
 
 
@@ -542,3 +543,31 @@ async function updateExcluded(){
             // console.log("IGNORELIST : ",ignoreList)
             return ignoreList
         }
+
+
+function showStreamImage(imageUrl) {
+    const root = document.getElementById('overlay-root');
+
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    img.className = 'stream-popup';
+
+    root.appendChild(img);
+
+    // Force reflow so animation triggers
+    img.offsetHeight;
+
+    // Slide UP
+    img.classList.add('show');
+
+    // Stay visible for 3 seconds
+    setTimeout(() => {
+        img.classList.remove('show');
+        img.classList.add('hide');
+    }, 3500);
+
+    // Remove after animation completes
+    setTimeout(() => {
+        img.remove();
+    }, 5000);
+}

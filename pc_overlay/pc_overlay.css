@@ -94,3 +94,32 @@ body {
   height: 1.2em;
   vertical-align: middle;
 }
+
+
+#alert-root {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.stream-popup {
+  position: absolute;
+  bottom: -150px; /* start off-screen */
+  right: 20px;
+  width: 200px; /* adjust for your image */
+  opacity: 0;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  transform: translateY(0);
+}
+
+.stream-popup.show {
+  opacity: 1;
+  transform: translateY(-170px); /* slide UP */
+}
+
+.stream-popup.hide {
+  opacity: 0;
+  transform: translateY(0); /* slide DOWN */
+}

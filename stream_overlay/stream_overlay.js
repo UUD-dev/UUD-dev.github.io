@@ -166,14 +166,65 @@ client.on('Twitch.ReSub', ({ event, data }) => {
         );
 });
 
+// client.on('Twitch.RewardRedemption', ({ event, data }) => {
+//     let username = data.user_name
+//     let title = data.reward.title
+//     displayAlertMessage(
+//         `${username} redeemed ${title}!`,
+//         ['alertReward'],
+//     );   
+// });
+
 client.on('Twitch.RewardRedemption', ({ event, data }) => {
     let username = data.user_name
     let title = data.reward.title
-    displayAlertMessage(
-        `${username} redeemed ${title}!`,
-        ['alertReward'],
-    );   
+	let message = ""
+	if (data.user_input){message = data.user_input}
+	console.log('user_input',data.user_input)
+	
+	let messageString = `[${username}] ${message}`
+	console.log(`${username} Redeemed ${title} with message: '${message}'`)
+    switch (title) {
+		case 'Fingerguns':
+			queueStreamPopup(
+				'images/FingerGuns.png',
+				messageString,
+				'audio/pewpew.mp3'
+				);
+			break;
+		case 'Facepalm':
+			queueStreamPopup(
+				'images/Facepalm.png',
+				messageString,
+				'audio/facepalm.wav'
+				);
+			break;
+		case 'Silly':
+			queueStreamPopup(
+				'images/Silly.png',
+				messageString,
+				'audio/Duh.wav'
+				);
+			break;
+		case 'Saiyan':
+			queueStreamPopup(
+				'images/Saiyan.png',
+				messageString,
+				'audio/dbz.mp3'
+				);
+			break;
+		case 'RIP':
+			queueStreamPopup(
+				'images/RIP.png',
+				messageString,
+				'audio/RIP.mp3'
+				);
+			break;
+		default:
+			break;
+	}
 });
+
 
 ///////////////////
 //MESSAGE FUNCTIONS
@@ -511,24 +562,97 @@ function sanitizeChatText(text, options = {}) {
 }
   
 async function updateExcluded(){
-            //reset the array
-            ignoreList = ['Streamelements', 'NightBot']
-            // retreive the broadcaster information from Streamer.bot
-            const response = await client.getBroadcaster(); 
-            // console.log("response",response)
-            // console.log(response.platforms)
-            //This loops through all active streaming platforms (Twitch, YouTube)
-            for (let i in response.platforms){
+    //reset the array
+    ignoreList = ['Streamelements', 'NightBot']
+    // retreive the broadcaster information from Streamer.bot
+    const response = await client.getBroadcaster(); 
+    // console.log("response",response)
+    // console.log(response.platforms)
+    //This loops through all active streaming platforms (Twitch, YouTube)
+    for (let i in response.platforms){
 
-                if (response.platforms[i].botUserName){
-                    ignoreList.push(response.platforms[i].botUserName)
-                }
-
-                if (response.platforms[i].broadcastUserName){
-                    ignoreList.push(response.platforms[i].broadcastUserName)
-                }
-                
-            }
-            // console.log("IGNORELIST : ",ignoreList)
-            return ignoreList
+        if (response.platforms[i].botUserName){
+            ignoreList.push(response.platforms[i].botUserName)
         }
+
+        if (response.platforms[i].broadcastUserName){
+            ignoreList.push(response.platforms[i].broadcastUserName)
+        }
+        
+    }
+    // console.log("IGNORELIST : ",ignoreList)
+    return ignoreList
+}
+
+
+function showStreamPopup(imageUrl, messageText, onComplete, soundUrl) {
+	const root = document.getElementById('overlay-root');
+
+	const container = document.createElement('div');
+	container.className = 'stream-popup';
+
+	const img = document.createElement('img');
+	img.src = imageUrl;
+
+	const message = document.createElement('div');
+	message.className = 'message';
+	message.textContent = messageText;
+
+	container.appendChild(img);
+	container.appendChild(message);
+	root.appendChild(container);
+
+	container.offsetHeight;
+
+	// 🔊 PLAY SOUND WHEN POPUP ENTERS
+	if (soundUrl) {
+		playAlertSound(soundUrl, 0.8);
+	}
+
+	// Slide in
+	container.classList.add('show');
+
+	const visibleDuration = 10_000;
+	const exitAnimationDuration = 500;
+
+	setTimeout(() => {
+		container.classList.remove('show');
+		container.classList.add('hide');
+
+		setTimeout(() => {
+		onComplete?.();
+		}, exitAnimationDuration);
+
+	}, visibleDuration);
+
+	// Cleanup (non-blocking)
+	setTimeout(() => {
+		container.remove();
+	}, visibleDuration + exitAnimationDuration + 1000);
+}
+
+function playAlertSound(url, volume = 1.0) {
+	const audio = new Audio(url);
+	audio.volume = volume;
+	audio.play().catch(err => {
+		console.warn('Alert sound blocked:', err);
+	});
+}
+
+function queueStreamPopup(imageUrl, messageText, soundUrl) {
+	popupQueue.push({ imageUrl, messageText, soundUrl });
+	processPopupQueue();
+}
+
+function processPopupQueue() {
+	if (isPopupActive) return;
+	if (popupQueue.length === 0) return;
+
+	isPopupActive = true;
+	const { imageUrl, messageText, soundUrl } = popupQueue.shift();
+
+	showStreamPopup(imageUrl, messageText, () => {
+		isPopupActive = false;
+		processPopupQueue();
+	}, soundUrl);
+}
