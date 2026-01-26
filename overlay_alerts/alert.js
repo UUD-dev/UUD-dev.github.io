@@ -1,7 +1,7 @@
 /////////
 //GLOBALS
 /////////
-const ver = "1.1.2"
+const ver = "1.1.3"
 const popupQueue = [];
 let isPopupActive = false;
 const userColors = new Map();
@@ -31,7 +31,7 @@ const client = new StreamerbotClient({
         );
     },
     onConnect: async (data) => {
-        console.log('connected v 0.2.4.4')
+        console.log(`Alert Overlay Connected (v${ver})`)
         await updateExcluded()
         setInterval(async() => {
                     await updateExcluded()
