@@ -37,7 +37,7 @@ const client = new StreamerbotClient({
                     await updateExcluded()
                 }, 1000*60*5);
         displayAlertMessage(
-            'Alert Overlay Connected (v0.2.4.2)',
+            'Alert Overlay Connected (v0.2.4.3)',
             ['alertConnected'],
             1
         );
