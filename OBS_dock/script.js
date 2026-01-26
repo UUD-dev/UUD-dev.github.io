@@ -19,7 +19,7 @@ const client = new StreamerbotClient({
     },
     onConnect: async () => {
         displayTemporaryMessage(
-            `<b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Client connected successfully! (v${ver}})</span></b>`
+            `<b><img class="icon" src="images/alert.png"></img> <span class="alertMessage">[CONNECTED] Client connected successfully! (v${ver})</span></b>`
         );
         const excludedList = await updateExcluded();
         displayTemporaryMessage(
