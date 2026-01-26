@@ -144,6 +144,24 @@ client.on('Twitch.ReSub', ({ event, data }) => {
 //     );   
 // });
 
+client.on('Command.Triggered', (data) => {
+	console.log("COMMAND TRIGGERED:",data.data)
+	switch (data.data.name) {
+		case "setDeath":
+			setDeathCount(data)
+			break;
+		case "TestCommand":
+			playSound('audio/flashbang.mp3')
+		case "Refresh":
+			location.reload()
+			break;
+		default:
+			console.log("unknown command trigger!")
+			return
+	}
+	
+});
+
 client.on('Twitch.RewardRedemption', ({ event, data }) => {
     let username = data.user_name
     let title = data.reward.title
@@ -154,6 +172,15 @@ client.on('Twitch.RewardRedemption', ({ event, data }) => {
 	let messageString = `[${username}] ${message}`
 	console.log(`${username} Redeemed ${title} with message: '${message}'`)
     switch (title) {
+		case "Flashbang":
+			flashBangActivate(data)
+			break;
+		case "Blackhole":
+			blackoutActivate(data)
+			break;
+		case "Jumpscare":
+			jumpscareActivate(data)
+			break;
 		case 'Fingerguns':
 			queueStreamPopup(
 				'images/FingerGuns.png',
@@ -194,10 +221,86 @@ client.on('Twitch.RewardRedemption', ({ event, data }) => {
 	}
 });
 
+/////////////////////////
+//DEATH COUNTER FUNCTIONS
+/////////////////////////
+
+function activateDeathAdd(data){
+	let element = document.getElementById("death-counter")
+	element.innerHTML = parseInt(element.innerHTML) + 1
+}
+function activateDeathSubtract(data){
+	let element = document.getElementById("death-counter")
+	element.innerHTML = parseInt(element.innerHTML) + -1
+}
+
+function setDeathCount(data){
+	console.log(data.data.message)
+	let deathcount = data.data.message.replace(`${data.data.command} `,"")
+	let element = document.getElementById("death-counter")
+	element.innerHTML = parseInt(deathcount)
+}
 
 /////////////////
 //ALERT FUNCTIONS
 /////////////////
+
+var flashbangDiv = document.getElementById('flashbang');
+	flashbangDiv.style.backgroundColor = "#00000000";
+
+function flashBangActivate(data) {
+
+    var flashbangDiv = document.getElementById('flashbang');
+	
+	var flashbangMessage = document.getElementById('flashbangMessage');
+
+    flashbangDiv.style.transition = 'none';
+    flashbangDiv.style.backgroundColor = 'white';
+	flashbangMessage.innerHTML = `[${data.user_name}]`
+	playSound('audio/flashbang.mp3')
+    setTimeout(() => {
+		flashbangDiv.style.transition = 'background-color 5s ease-out';
+        flashbangDiv.style.backgroundColor = "#00000000";
+		flashbangMessage.style.transition = 'color 5s ease-out';
+		flashbangMessage.style.color = "#00000000";
+    }, 2000);
+}
+
+function blackoutActivate(data) {
+    var blackoutDiv = document.getElementById('blackout');
+	var blackoutMessage = document.getElementById('blackoutMessage')
+
+    blackoutDiv.style.transition = 'none';
+    blackoutDiv.style.backgroundColor = 'white';
+	blackoutMessage.innerHTML = `[${data.user_name}]`
+    blackoutDiv.style.backgroundColor = 'black';
+
+    setTimeout(() => {
+		blackoutDiv.style.transition = 'background-color 3s ease-out';
+        blackoutDiv.style.backgroundColor = "#00000000";
+		blackoutMessage.style.transition = 'color 3s ease-out';
+		blackoutMessage.style.color = "#00000000";
+    }, 5000);
+}
+
+function jumpscareActivate(data) {
+    var jumpscareDiv = document.getElementById('jumpscare');
+	var jumpscareMessage = document.getElementById('jumpscareMessage');
+
+	playSound("audio/jumpscare.mp3")
+
+    jumpscareDiv.style.transition = 'none';
+    jumpscareDiv.style.opacity = '100%';
+	jumpscareMessage.innerHTML = `[${data.user_name}]`
+    jumpscareDiv.style.backgroundColor = 'black';
+
+    setTimeout(() => {
+		jumpscareDiv.style.transition = 'opacity 1s ease-out';
+        jumpscareDiv.style.opacity = "0%";
+		jumpscareMessage.style.transition = 'color 1s ease-out';
+		jumpscareMessage.style.color = "#00000000";
+    }, 1000);
+}
 
 
 function showStreamPopup(imageUrl, messageText, onComplete, soundUrl) {
