@@ -1,13 +1,20 @@
 /////////
 //GLOBALS
 /////////
-const ver = "1.2.2"
+const ver = "1.3.2"
 const popupQueue = [];
 let isPopupActive = false;
 const userColors = new Map();
 const MAX_MESSAGES = 50; // adjust for your overlay size
 var ignoreList = []
+const JUMPSCARE_IMAGES = [
+  'images/jumpscare/scare1.png'
+];
 
+JUMPSCARE_IMAGES.forEach(src => {
+  const img = new Image();
+  img.src = src;
+});
 ///////////////////////////////////////
 //CONNECTING TO THE STREAMER.BOT CLIENT
 ///////////////////////////////////////
@@ -660,38 +667,56 @@ function jumpscareActivate(data) {
     const image = document.getElementById('jumpscareImage');
     const message = document.getElementById('jumpscareMessage');
 
+    // 🔒 SAFETY: broken image handler (only needs to exist once)
+    image.onerror = () => {
+        console.warn('Jumpscare image failed:', image.src);
+        image.style.opacity = '0'; // hide broken image
+    };
+
     playAlertSound("audio/jumpscare.mp3");
+
+    // 🔀 RANDOM IMAGE
+    image.src = getRandomJumpscareImage();
 
     message.textContent = `[${data.user_name}]`;
 
-    // ACTIVATE
-    jumpscare.classList.add('active');
-
+    // RESET
     image.style.opacity = '1';
     message.style.opacity = '0';
 
-    // Force reflow
+    jumpscare.classList.remove('active');
     jumpscare.offsetHeight;
+    jumpscare.classList.add('active');
 
-    // MESSAGE FADE IN
+    // MESSAGE IN
     setTimeout(() => {
         message.style.opacity = '1';
     }, 200);
 
-    // IMAGE OUT FIRST
+    // FADE BOTH
     setTimeout(() => {
         image.style.opacity = '0';
-    }, 1000);
-
-    // MESSAGE LINGERS
-    setTimeout(() => {
         message.style.opacity = '0';
-    }, 2600);
+    }, 2000);
 
     // CLEANUP
     setTimeout(() => {
         jumpscare.classList.remove('active');
-    }, 3400);
+    }, 2600);
+}
+
+let lastJumpscare = null;
+
+function getRandomJumpscareImage() {
+  let pick;
+  do {
+    pick = JUMPSCARE_IMAGES[
+      Math.floor(Math.random() * JUMPSCARE_IMAGES.length)
+    ];
+  } while (pick === lastJumpscare && JUMPSCARE_IMAGES.length > 1);
+
+  lastJumpscare = pick;
+  return pick;
 }
 
 
