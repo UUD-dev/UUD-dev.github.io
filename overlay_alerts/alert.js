@@ -37,7 +37,7 @@ const client = new StreamerbotClient({
                     await updateExcluded()
                 }, 1000*60*5);
         displayAlertMessage(
-            'Alert Overlay Connected (v0.2.4.4)',
+            'Alert Overlay Connected (v0.3.0.1)',
             ['alertConnected'],
             1
         );
@@ -205,7 +205,7 @@ client.on('Twitch.RewardRedemption', ({ event, data }) => {
 			break;
 		case 'Facepalm':
 			queueStreamPopup(
-				'images/Facepalm.png',
+				'images/FacePalm.png',
 				messageString,
 				'audio/facepalm.wav'
 				);
