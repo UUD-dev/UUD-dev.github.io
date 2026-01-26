@@ -37,7 +37,7 @@ const client = new StreamerbotClient({
                     await updateExcluded()
                 }, 1000*60*5);
         displayAlertMessage(
-            'Alert Overlay Connected (v0.3.2.5)',
+            'Alert Overlay Connected (v0.3.2.6)',
             ['alertConnected'],
             1
         );
@@ -641,16 +641,19 @@ function flashBangActivate(data) {
 function blackoutActivate(data) {
   const blackout = document.getElementById('blackout');
 
+  playAlertSound('audio/blackhole.mp3', 0.6); // optional but 🔥
+
+  // Reset animation
   blackout.classList.remove('active');
-  blackout.offsetHeight; // reset animation
+  blackout.offsetHeight; // force reflow
   blackout.classList.add('active');
 
+  // Cleanup
   setTimeout(() => {
     blackout.classList.remove('active');
     blackout.style.display = 'none';
-  }, 4000);
+  }, 6000);
 }
-
 function jumpscareActivate(data) {
 	const jumpscareDiv = document.getElementById('jumpscare');
 	const jumpscareMessage = document.getElementById('jumpscareMessage');
