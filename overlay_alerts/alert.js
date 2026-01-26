@@ -654,6 +654,7 @@ function blackoutActivate(data) {
     blackout.style.display = 'none';
   }, 6000);
 }
+
 function jumpscareActivate(data) {
 	const jumpscareDiv = document.getElementById('jumpscare');
 	const jumpscareMessage = document.getElementById('jumpscareMessage');
