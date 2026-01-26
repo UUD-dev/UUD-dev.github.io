@@ -1,4 +1,4 @@
-const ver = "1.0.1"
+const ver = "1.1.2"
 const websocketport = 8080;
 const websockethost = '127.0.0.1';
 let ignoreList = [];
@@ -69,6 +69,9 @@ function handleRewardRedemption(data){
     displayAlertMessage(messageString)
 }
 
+function handleTwitchFollow(data){
+    console.log(data.data)
+}
 function displayChatMessage(data, platform) {
     const newMessageDiv = document.createElement('div');
     const messageId = generateMessageId();
@@ -166,7 +169,7 @@ async function updateExcluded() {
         if (platform?.broadcastUserName) ignoreList.push(platform.broadcastUserName);
     });
 
-    console.log("IGNORELIST:", ignoreList);
+    // console.log("IGNORELIST:", ignoreList);
     return ignoreList;
 }
 
@@ -176,7 +179,8 @@ async function updateExcluded() {
 
 client.on('Twitch.ChatMessage', handleTwitchMessage);
 client.on('YouTube.Message', handleYoutubeMessage);
-
+client.on('Twitch.RewardRedemption', handleRewardRedemption);
+client.on('Twitch.Follow', handleTwitchFollow)
 // Example alert events
 client.on('YouTube.NewSubscriber', ({ data }) => {
     const username = data.data.user.name;
@@ -185,4 +189,4 @@ client.on('YouTube.NewSubscriber', ({ data }) => {
 
 // Add other alert events similarly as needed...
 
-client.on('Twitch.RewardRedemption', handleRewardRedemption);
+
