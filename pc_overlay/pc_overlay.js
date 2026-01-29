@@ -1,4 +1,4 @@
-const ver = "1.0.0"
+const ver = "1.0.1"
 const userColors = new Map();
 const MAX_MESSAGES = 50; // adjust for your overlay size
 var ignoreList = []
@@ -186,7 +186,7 @@ client.on('Twitch.RewardRedemption', ({ event, data }) => {
 	if (data.user_input){message = data.user_input}
     let messageString = `[${username}] ${message}`
     displayAlertMessage(
-        `${username} redeemed ${title}!\'n${messageString}'`,
+        `${username} redeemed ${title}: '\n${messageString}'`,
         ['alertReward'],
         20
     );   
