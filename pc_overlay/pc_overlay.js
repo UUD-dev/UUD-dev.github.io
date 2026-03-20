@@ -293,7 +293,7 @@ function displayTwitchChatMessage(data) {
         classes
     });
 
-    appendMessage(messageNode, 60);
+    appendMessage(messageNode, 0);
 }
 
 
@@ -312,7 +312,7 @@ function displayYoutubeChatMessage(data) {
         message: safeMessage
     });
 
-    appendMessage(messageNode, 60);
+    appendMessage(messageNode, 0);
 }
 
 
