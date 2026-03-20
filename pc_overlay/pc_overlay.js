@@ -1,4 +1,4 @@
-const ver = "1.0.1"
+const ver = "1.0.2"
 const userColors = new Map();
 const MAX_MESSAGES = 50; // adjust for your overlay size
 var ignoreList = []
