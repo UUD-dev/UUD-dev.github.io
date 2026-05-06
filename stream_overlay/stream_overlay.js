@@ -34,7 +34,7 @@ const client = new StreamerbotClient({
         displayAlertMessage(
             `Chat Overlay Connected (v${ver})`,
             ['alertConnected'],
-            1
+            2
         );
     }
 
@@ -82,7 +82,8 @@ client.on('YouTube.NewSubscriber', ({ event, data }) => {
 
     displayAlertMessage(
         `${username} just subscribed on YouTube!`,
-        ['alertSub']
+        ['alertSub'],
+		60
     );   
 
     
@@ -93,7 +94,8 @@ client.on('YouTube.SuperChat', ({ event, data }) => {
     let message = data.data.message.message
     displayAlertMessage(
         `[SUPERCHAT] ${username}: ${message}`,
-        ['alertSuperchat']
+        ['alertSuperchat'],
+		60
     );
 
 });
@@ -102,7 +104,8 @@ client.on('Twitch.Follow', ({ event, data }) => {
     let username = data.user_name
     displayAlertMessage(
         `${username} Just Followed on Twitch!`,
-        ['alertFollow']
+        ['alertFollow'],
+		60
     );
 
 });
@@ -113,7 +116,8 @@ client.on('Twitch.Cheer', ({ event, data }) => {
     let message = data.message
     displayAlertMessage(
         `${username} Just cheered ${bits}Bits! (${message})`,
-        ['alertCheer']
+        ['alertCheer'],
+		60
     );
 
 });
@@ -125,7 +129,8 @@ client.on('Twitch.CoinCheer', ({ event, data }) => {
     
     displayAlertMessage(
         `${username} just cheered ${bits} Bits! (${message})`,
-        ['alertCheer']
+        ['alertCheer'],
+		60
     );
 
 });
@@ -136,13 +141,15 @@ client.on('Twitch.GiftBomb', ({ data }) => {
     giftReceivers.forEach(receiver => {
         displayAlertMessage(
         `${receiver.name} received a gifted sub!`,
-        ['alertSub']
+        ['alertSub'],
+			60
         );
     });
 
     displayAlertMessage(
         `${data.user} gave out ${giftReceivers.length} gifted subs!`,
-        ['alertSub']
+        ['alertSub'],
+		60
     );
 });
 
@@ -152,7 +159,8 @@ client.on('Twitch.GiftSub', ({ event, data }) => {
 
     displayAlertMessage(
         `${receiver} received a gifted sub from ${gifter}!`,
-        ['alertSub']
+        ['alertSub'],
+		60
     );
 
 });
@@ -162,7 +170,8 @@ client.on('Twitch.ReSub', ({ event, data }) => {
     let subLength = data.user.monthsSubscribed
     displayAlertMessage(
         `${username} just re-subscribed! (${subLength} months)`,
-        ['alertSub']
+        ['alertSub'],
+		60
         );
 });
 
@@ -348,7 +357,7 @@ function displayYoutubeChatMessage(data) {
 }
 
 
-function displayAlertMessage(text, extraClasses = [], timeout = 20) {
+function displayAlertMessage(text, extraClasses = [], timeout = 60) {
   const alertNode = createChatMessage({
     icon: 'images/alert.png',
     message: text,
