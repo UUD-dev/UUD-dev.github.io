@@ -282,7 +282,7 @@ function createChatMessage({
     return container;
 }
 
-function appendMessage(node, timeout = 0) {
+function appendMessage(node, timeout = 60) {
   const messageId = generateMessageId();
   node.id = messageId;
 
